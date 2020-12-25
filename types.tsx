@@ -1,0 +1,193 @@
+import { ReactNode } from 'react';
+import { ImageRequireSource } from 'react-native';
+
+// SVG Params
+export type SvgParams = {
+  color?: string;
+  width?: number;
+  height?: number;
+  stroke?: number;
+};
+
+// Navigators
+export type RootParamList = {
+  AppNav: undefined;
+  AuthNav: undefined;
+};
+
+export type AuthParamList = {
+  Welcome: undefined;
+  Register: undefined;
+  ForgotPassword: undefined;
+};
+
+export type HomeNavParamList = {
+  Home: undefined;
+  Favorites: undefined;
+  Notifications: undefined;
+  ProductDetail: { product: Product };
+  CategoryDetail: { category: Category };
+  Categories: { categories: Category[] };
+  Sale: undefined;
+};
+
+export type ExploreNavParamList = {
+  Explore: undefined;
+  CategoryDetail: { category: Category };
+  Favorites: undefined;
+  Notifications: undefined;
+};
+
+export type AppNavParamList = {
+  Home: undefined;
+  Explore: undefined;
+  Cart: undefined;
+  Offer: undefined;
+  Account: undefined;
+};
+
+export type CartNavParamList = {
+  Cart: undefined;
+  ShipTo: undefined;
+  Payment: { address: DeliveryAddress };
+  ChooseCard: undefined;
+  AddAddress: undefined;
+  EditAddress: { address: DeliveryAddress };
+  Success: undefined;
+};
+
+export type AccountNavParamList = {
+  Profile: undefined;
+  BasicInfo: undefined;
+  AddressInfo: undefined;
+  PaymentInfo: undefined;
+  Password: undefined;
+  AddCard: undefined;
+  AddAddress: undefined;
+};
+
+export type OfferNavParamList = {
+  Offer: undefined;
+  OfferDetail: undefined;
+};
+
+// Context
+export interface User {
+  fullName?: string;
+  email?: string;
+  password?: string;
+}
+
+export interface AppContext {
+  isLoggedIn: boolean;
+  setUserState: (state: boolean) => void;
+  user: User;
+  addUserDetails: (userDetails: User) => void;
+  cart: ProductOrder[];
+  isProductInCart: (product: ProductOrder) => boolean;
+  manageCart: (
+    actions: ACTIONS,
+    product?: ProductOrder,
+    quantity?: number
+  ) => void;
+  cartTotal: number;
+}
+
+export type ACTIONS =
+  | 'ADD_TO_CART'
+  | 'REMOVE_FROM_CART'
+  | 'INCREASE_COUNT'
+  | 'DECREASE_COUNT'
+  | 'EMPTY_CART';
+
+// Image
+
+interface ImageProps {
+  id: number;
+  src: string;
+  name?: string;
+  alt?: string;
+}
+
+// Product
+export interface Product {
+  id: number;
+  Meta_thumbnail_id: string;
+  Title: string;
+  Description: string;
+  Short_Desc: string;
+  Regular_price: string;
+  Sale_price: string;
+  Gallery: string;
+  Categories: string;
+}
+
+export interface ProductOrder {
+  id: number;
+  Meta_thumbnail_id: string;
+  Title: string;
+  Description: string;
+  Short_Desc: string;
+  Regular_price: string;
+  Sale_price: string;
+  Gallery: string;
+  Categories: string;
+  count?: number;
+}
+
+// Address Content
+export interface DeliveryAddress {
+  id: number;
+  name: string;
+  addressDetail: string;
+  phone: string;
+}
+
+// banner
+export interface BannerProps {
+  image: string;
+  id: number;
+}
+
+// variant
+export interface Variant {
+  value: number | string;
+}
+
+// category
+export interface Category {
+  id: number;
+  category_name: string;
+  slug: string;
+}
+
+// notifications
+
+export interface NotificationProp {
+  id: number;
+  title: string;
+  body: string;
+  date: string;
+}
+
+// Customer Card Details
+
+export interface CustomerCardDetailsProp {
+  id: number;
+  cardNumber: string;
+  cardHolder: string;
+  date: string;
+}
+
+// Offer Card
+
+export interface OfferCardProp {
+  id: number;
+  image: ImageRequireSource;
+}
+
+export interface PaymentOptions {
+  id: number;
+  title: string;
+  icon: ReactNode;
+}
