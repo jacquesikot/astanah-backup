@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  SafeAreaView,
-  TouchableHighlight,
-} from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 import {
   Box,
@@ -22,8 +17,7 @@ import {
   LocationIcon,
   LockIcon,
 } from '../../Svg';
-
-const { width } = Dimensions.get('window');
+import useAuth from '../../hooks/useAuth';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,16 +31,20 @@ interface ProfileProps {}
 const Profile = ({
   navigation,
 }: StackScreenProps<AccountNavParamList, 'Profile'>) => {
+  const { user, logOut } = useAuth();
+  const { first_name, last_name, email } = user;
+  const lastNameValue = last_name ? last_name : '';
+
   return (
     <SafeAreaView style={styles.container}>
       <Box>
         <StackHeader title="Account" />
-        <ProfileHead />
-        <ScrollView
-          decelerationRate={16}
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-        >
+        <ProfileHead
+          firstName={first_name}
+          lastName={lastNameValue}
+          email={email}
+        />
+        <Box>
           <TouchableHighlight
             underlayColor={theme.colors.light}
             onPress={() => navigation.navigate('BasicInfo')}
@@ -55,6 +53,7 @@ const Profile = ({
               label="Basic Information"
               icon={<GenderIcon color={theme.colors.primary} />}
               chevron
+              borderBottom
             />
           </TouchableHighlight>
 
@@ -66,6 +65,7 @@ const Profile = ({
               label="Addresses"
               icon={<LocationIcon color={theme.colors.primary} />}
               chevron
+              borderBottom
             />
           </TouchableHighlight>
           <TouchableHighlight
@@ -76,6 +76,7 @@ const Profile = ({
               label="Payments"
               icon={<CardTransferIcon color={theme.colors.primary} />}
               chevron
+              borderBottom
             />
           </TouchableHighlight>
           <TouchableHighlight
@@ -86,9 +87,22 @@ const Profile = ({
               label="Passwords"
               icon={<LockIcon color={theme.colors.primary} />}
               chevron
+              borderBottom
             />
           </TouchableHighlight>
-        </ScrollView>
+        </Box>
+        <TouchableHighlight
+          underlayColor={theme.colors.light}
+          onPress={() => logOut()} // implement 'are you sure you wanna logout'
+        >
+          <ListItem
+            label="Logout"
+            icon={<LockIcon color={theme.colors.red} />}
+            chevron
+            borderBottom
+            textColor="red"
+          />
+        </TouchableHighlight>
       </Box>
     </SafeAreaView>
   );

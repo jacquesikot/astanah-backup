@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Animated, SafeAreaView, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -30,6 +30,7 @@ import homeBanners from '../data/homeBanner';
 import { useApi } from '../hooks';
 import categoriesApi from '../api/categories';
 import productsApi from '../api/products';
+import { Search } from '.';
 
 const { width } = Dimensions.get('window');
 const NEW_HEADER_HEIGHT = HEADER_HEIGHT + Constants.statusBarHeight;
@@ -75,6 +76,8 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
   const getCategoriesApi = useApi(categoriesApi.getCategories);
   const getProductsApi = useApi(productsApi.getProducts);
 
+  const [searchModal, setSearchModal] = useState<boolean>(false);
+
   useEffect(() => {
     getCategoriesApi.request();
     getProductsApi.request();
@@ -109,6 +112,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
             <HomeHeader
               favorite={() => navigation.navigate('Favorites')}
               notification={() => navigation.navigate('Notifications')}
+              onFocus={() => alert('pressed')}
             />
           </Animated.View>
           <Animated.ScrollView

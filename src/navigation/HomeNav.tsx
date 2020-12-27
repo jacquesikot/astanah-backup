@@ -1,7 +1,7 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import { HomeNavParamList } from "../../types";
+import { HomeNavParamList } from '../../types';
 import {
   Home,
   Favorites,
@@ -10,7 +10,8 @@ import {
   Categories,
   Sale,
   CategoryDetail,
-} from "../screens";
+  Search,
+} from '../screens';
 
 const AuthStack = createStackNavigator<HomeNavParamList>();
 
@@ -24,6 +25,7 @@ const HomeNav = () => {
       <AuthStack.Screen name="CategoryDetail" component={CategoryDetail} />
       <AuthStack.Screen name="Categories" component={Categories} />
       <AuthStack.Screen name="Sale" component={Sale} />
+      <AuthStack.Screen name="Search" component={Search} />
     </AuthStack.Navigator>
   );
 };

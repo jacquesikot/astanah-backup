@@ -15,8 +15,8 @@ import {
   Box,
   StackHeader,
   theme,
-  ActivityIndicator,
   ProductCard,
+  ProductPageSkeleton,
 } from '../components';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
@@ -59,47 +59,54 @@ const Sale = ({ navigation }: StackScreenProps<HomeNavParamList>) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ActivityIndicator visible={getProductsApi.loading} />
-      <Box>
-        <StackHeader
-          title="Sales"
-          back={() => navigation.goBack()}
-          filter={() => true}
+      {getProductsApi.loading ? (
+        <ProductPageSkeleton
+          header="Sales"
+          banner={require('../../assets/banner2.jpeg')}
         />
-        <ScrollView
-          scrollEventThrottle={16}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-        >
-          <Box style={{ alignItems: 'center', marginTop: 20 }}>
-            <Banner
-              image="https://i.ibb.co/Jt8x3q9/banner1.jpg"
-              margin={false}
-            />
-          </Box>
-          <Box style={styles.productContainer}>
-            <FlatList
-              numColumns={2}
-              data={getProductsApi.data}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.navigate('ProductDetail', { product: item })
-                  }
-                >
-                  <ProductCard
-                    product={item}
-                    width={CARD_WIDTH}
-                    height={CARD_HEIGHT}
-                    marginRight={30}
-                  />
-                </TouchableWithoutFeedback>
-              )}
-            />
-          </Box>
-        </ScrollView>
-      </Box>
+      ) : (
+        <Box>
+          <StackHeader
+            title="Sales"
+            back={() => navigation.goBack()}
+            filter={() => true}
+          />
+          <ScrollView
+            scrollEventThrottle={16}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+          >
+            <Box style={{ alignItems: 'center', marginTop: 20 }}>
+              <Banner
+                src={require('../../assets/banner2.jpeg')}
+                height={180}
+                margin={false}
+              />
+            </Box>
+            <Box style={styles.productContainer}>
+              <FlatList
+                numColumns={2}
+                data={getProductsApi.data}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableWithoutFeedback
+                    onPress={() =>
+                      navigation.navigate('ProductDetail', { product: item })
+                    }
+                  >
+                    <ProductCard
+                      product={item}
+                      width={CARD_WIDTH}
+                      height={CARD_HEIGHT}
+                      marginRight={30}
+                    />
+                  </TouchableWithoutFeedback>
+                )}
+              />
+            </Box>
+          </ScrollView>
+        </Box>
+      )}
     </SafeAreaView>
   );
 };

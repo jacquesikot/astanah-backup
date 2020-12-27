@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions, SafeAreaView } from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import theme, { Box, Text } from '../components/Theme';
 import {
@@ -11,11 +12,12 @@ import {
   Link,
   LoginButton,
   TextInput,
+  ActivityIndicator,
 } from '../components';
 import { AuthParamList } from '../../types';
-import { useAppContext } from '../context/context';
 import { CloseEye, Eye } from '../Svg';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import localAuthApi from '../api/localAuth';
+import useAuth from '../hooks/useAuth';
 
 const { width } = Dimensions.get('window');
 const SCREEN_PADDING = theme.spacing.xl * 2;
@@ -61,15 +63,35 @@ const LoginSchema = Yup.object().shape({
 });
 
 interface WelcomeProps {}
+interface FormProps {
+  email: string;
+  password: string;
+}
 
 const Welcome = ({
   navigation,
 }: StackScreenProps<AuthParamList, 'Welcome'>) => {
   const [passwordVissible, setPasswordVissible] = useState<boolean>(false);
-  const { user, setUserState } = useAppContext();
-  const [errorVisible, setErrorVisible] = useState<boolean>(false);
+  const { logIn } = useAuth();
+  const [loginFailed, setLoginFailed] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleSubmit = async ({ email, password }: FormProps) => {
+    setLoading(true);
+    const result = await localAuthApi.login(email, password);
+    if (!result.ok) {
+      setLoginFailed(true);
+      setLoading(false);
+      return;
+    }
+    setLoginFailed(false);
+    logIn(result.data as string);
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <ActivityIndicator visible={loading} opacity={0.8} />
       <Box style={styles.logo}>
         <Text color="white">Logo</Text>
       </Box>
@@ -82,24 +104,15 @@ const Welcome = ({
       <Formik
         validationSchema={LoginSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => {
-          setUserState(true);
-        }}
+        onSubmit={handleSubmit}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, errors, touched }) => (
           <Box style={styles.inputs}>
             <Box style={{ marginBottom: 7 }}>
               <Box>
                 <ErrorMessage
                   error="Invalid email and/or password"
-                  visible={errorVisible}
+                  visible={loginFailed}
                 />
               </Box>
               <TextInput

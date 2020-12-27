@@ -1,11 +1,10 @@
 import React from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Box, theme } from '..';
 import SearchInput from '../SearchInput';
 import { HeartIcon, AlarmIcon } from '../../Svg';
-import { HomeNavParamList } from '../../../types';
-import { StackNavigationProp } from '@react-navigation/stack';
 
 const { width } = Dimensions.get('window');
 export const HEADER_HEIGHT = 70;
@@ -45,12 +44,13 @@ const styles = StyleSheet.create({
 interface HomeHeaderProps {
   favorite: () => void;
   notification: () => void;
+  onFocus?: any;
 }
 
-const HomeHeader = ({ favorite, notification }: HomeHeaderProps) => {
+const HomeHeader = ({ favorite, notification, onFocus }: HomeHeaderProps) => {
   return (
     <Box style={styles.container}>
-      <SearchInput placeholder="Search Products" />
+      <SearchInput placeholder="Search Products" onFocus={onFocus} />
       <Box style={styles.icons}>
         <TouchableOpacity onPress={favorite}>
           <HeartIcon />

@@ -11,7 +11,6 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width,
-    height: 56,
     alignItems: 'center',
     flexDirection: 'row',
     marginLeft: 20,
@@ -28,18 +27,42 @@ const styles = StyleSheet.create({
 
 interface ListItemProps {
   label: string;
-  image?: any;
   chevron?: boolean;
   icon?: ReactNode;
   index?: number;
+  height?: number;
+  borderBottom?: boolean;
+  textColor?: 'red' | 'primary';
 }
 
-const ListItem = ({ label, image, chevron, index, icon }: ListItemProps) => {
+const ListItem = ({
+  label,
+  chevron,
+  index,
+  icon,
+  height,
+  borderBottom,
+  textColor,
+}: ListItemProps) => {
+  const heightValue = height ? height : 56;
+  const borderWidth = borderBottom ? 1 : 0;
+  const borderColor = borderBottom ? theme.colors.light : theme.colors.white;
+  const textColorValue = textColor ? textColor : 'primary';
+
   return (
-    <Box style={styles.container}>
+    <Box
+      style={[
+        styles.container,
+        {
+          height: heightValue,
+          borderBottomWidth: borderWidth,
+          borderBottomColor: borderColor,
+        },
+      ]}
+    >
       {index ? returnSvg(index) : null}
       {icon ? icon : null}
-      <Text variant="b3B" color="primary" marginLeft="m">
+      <Text variant="b3B" color={textColorValue} marginLeft="m">
         {capitalize(label)}
       </Text>
       <Box style={{ flex: 1 }} />

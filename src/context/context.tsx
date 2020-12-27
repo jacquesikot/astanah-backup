@@ -18,7 +18,12 @@ export const IMPORT_CHARGES = 75;
 const Context = createContext<AppContext>({
   isLoggedIn: false,
   setUserState: () => {},
-  user: {},
+  user: {
+    id: Math.random(),
+    first_name: '',
+    last_name: '',
+    email: '',
+  },
   addUserDetails: () => {},
   cart: [],
   manageCart: () => {},
@@ -31,9 +36,10 @@ const Provider = ({ children }: ProviderProps) => {
   const [cart, setCart] = useState<ProductOrder[]>([]);
   const [cartTotal, setCartTotal] = useState<number>(0);
   const [user, setUser] = useState<User>({
-    fullName: 'Super Admin',
-    email: 'admin@admin.com',
-    password: '12345',
+    id: Math.random(),
+    first_name: '',
+    last_name: '',
+    email: '',
   });
 
   const calculateTotal = () => {

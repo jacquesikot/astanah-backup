@@ -29,6 +29,7 @@ export type HomeNavParamList = {
   CategoryDetail: { category: Category };
   Categories: { categories: Category[] };
   Sale: undefined;
+  Search: undefined;
 };
 
 export type ExploreNavParamList = {
@@ -73,9 +74,11 @@ export type OfferNavParamList = {
 
 // Context
 export interface User {
-  fullName?: string;
-  email?: string;
-  password?: string;
+  id: number;
+  first_name: string;
+  last_name?: string;
+  email: string;
+  iat?: number;
 }
 
 export interface AppContext {

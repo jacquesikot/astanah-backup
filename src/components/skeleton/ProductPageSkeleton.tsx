@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 
-import { Box, StackHeader, theme, ProductFlatListSkeleton } from '..';
+import { Box, StackHeader, theme, ProductFlatListSkeleton, Banner } from '..';
 import { products } from '../../data';
 import { capitalize } from '../../utils';
 
@@ -22,15 +22,25 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xl,
     paddingBottom: 80,
   },
+  banner: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
 });
 
 interface ProductPageSkeletonProps {
   header: string;
+  banner?: any;
 }
-const ProductPageSkeleton = ({ header }: ProductPageSkeletonProps) => {
+const ProductPageSkeleton = ({ header, banner }: ProductPageSkeletonProps) => {
   return (
     <>
       <StackHeader title={capitalize(header)} back={() => true} />
+      {banner ? (
+        <Box style={styles.banner}>
+          <Banner src={banner} height={180} margin={false} />
+        </Box>
+      ) : null}
       <Box style={styles.productContainer}>
         <ProductFlatListSkeleton
           numColummns={2}

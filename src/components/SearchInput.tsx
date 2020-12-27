@@ -29,13 +29,18 @@ const styles = StyleSheet.create({
 
 interface SearchInputProps extends RNTextInputProps {
   placeholder: string;
+  props: any;
 }
 
-const SearchInput = ({ placeholder }: RNTextInputProps) => {
+const SearchInput = ({ placeholder, ...props }: RNTextInputProps) => {
   return (
     <Box style={styles.container}>
       <SearchIcon />
-      <RNTextInput style={styles.textInput} placeholder={placeholder} />
+      <RNTextInput
+        style={styles.textInput}
+        placeholder={placeholder}
+        {...props}
+      />
     </Box>
   );
 };

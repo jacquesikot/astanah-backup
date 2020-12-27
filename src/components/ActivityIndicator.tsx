@@ -2,11 +2,21 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-function ActivityIndicator({ visible = false }) {
+interface ActivityIndicatorProps {
+  visible: boolean;
+  opacity?: number;
+}
+
+function ActivityIndicator({
+  visible = false,
+  opacity,
+}: ActivityIndicatorProps) {
+  const opacityValue = opacity ? opacity : 1;
+
   if (!visible) return null;
 
   return (
-    <View style={styles.overlay}>
+    <View style={[styles.overlay, { opacity: opacityValue }]}>
       <LottieView
         autoPlay
         loop
@@ -17,8 +27,8 @@ function ActivityIndicator({ visible = false }) {
 }
 const styles = StyleSheet.create({
   overlay: {
+    position: 'absolute',
     backgroundColor: 'white',
-    opacity: 1,
     height: '100%',
     width: '100%',
     zIndex: 1,
