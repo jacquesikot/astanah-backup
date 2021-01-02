@@ -50,10 +50,10 @@ export type AppNavParamList = {
 export type CartNavParamList = {
   Cart: undefined;
   ShipTo: undefined;
-  Payment: { address: DeliveryAddress };
+  Payment: { address: BillingInfo };
   ChooseCard: undefined;
   AddAddress: undefined;
-  EditAddress: { address: DeliveryAddress };
+  EditAddress: { address: BillingInfo };
   Success: undefined;
 };
 
@@ -139,10 +139,16 @@ export interface ProductOrder {
 }
 
 // Address Content
-export interface DeliveryAddress {
+export interface BillingInfo {
   id: number;
-  name: string;
-  addressDetail: string;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  address: string;
+  city: string;
+  state: string;
+  postcode: string;
+  country: string;
   phone: string;
 }
 

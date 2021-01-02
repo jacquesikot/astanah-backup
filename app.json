@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Astanah3",
-    "slug": "astanah3",
+    "name": "Astanah",
+    "slug": "astanah",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#085827"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,11 +17,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "Astanah Shopping App 2"
+    "description": "Astanah Shopping App"
   }
 }

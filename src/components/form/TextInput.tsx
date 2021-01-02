@@ -1,31 +1,31 @@
-import React from "react";
+import React from 'react';
 import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   StyleSheet,
   Dimensions,
-} from "react-native";
-import { Feather as Icon } from "@expo/vector-icons";
+} from 'react-native';
+import { Feather as Icon } from '@expo/vector-icons';
 
-import { theme, Box } from "../../components";
+import { theme, Box } from '../../components';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const FORM_WIDTH = width - theme.spacing.xl * 2;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderWidth: 1,
     paddingLeft: theme.spacing.xl,
     paddingRight: theme.spacing.xl,
   },
   icon: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textInput: {
-    justifyContent: "center",
-    width: width - theme.spacing.xl * 6,
+    justifyContent: 'center',
+    width: width - theme.spacing.xl * 3,
   },
 });
 
@@ -49,8 +49,8 @@ const TextInput = ({
   noBorder,
   ...props
 }: TextInputProps) => {
-  const reBorderColor = !touched ? "light" : error ? "red" : "primary";
-  const reColor = !touched ? "grey" : error ? "red" : "primary";
+  const reBorderColor = !touched ? 'light' : error ? 'red' : 'primary';
+  const reColor = !touched ? 'grey' : error ? 'red' : 'primary';
   const borderColor = theme.colors[reBorderColor];
   const noBorderValue = noBorder ? theme.colors.white : borderColor;
   const color = theme.colors[reColor];

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Feather as Icon } from '@expo/vector-icons';
 
-import { DeliveryAddress } from '../../../types';
+import { BillingInfo } from '../../../types';
 import { theme, Box, Text, Button } from '../../components';
+import { capitalize } from '../../utils';
 
 const { width } = Dimensions.get('window');
 const COMPONENT_WIDTH = width - theme.spacing.xl * 2;
@@ -26,29 +27,37 @@ const styles = StyleSheet.create({
 });
 
 interface AddressItemProps {
-  address: DeliveryAddress;
-  trash?: () => void;
-  edit: () => void;
+  billing: BillingInfo;
+  trash?: any;
+  edit?: () => void;
 }
 
-const AddressItem = ({ address, trash, edit }: AddressItemProps) => {
-  const { name, addressDetail, phone } = address;
+const AddressItem = ({ billing, trash, edit }: AddressItemProps) => {
+  const { first_name, last_name, address, phone } = billing;
   const borderColor = theme.colors.light;
   return (
     <Box style={[styles.container, { borderColor: borderColor }]}>
       <Text variant="h4" color="primary" style={{ marginBottom: 10 }}>
-        {name}
+        {capitalize(first_name) + ' ' + capitalize(last_name)}
       </Text>
-      <Text variant="b2" color="grey" style={{ marginBottom: 10 }}>
-        {addressDetail}
+      <Text variant="b2" color="dark" style={{ marginBottom: 10 }}>
+        {address}
       </Text>
-      <Text variant="b2" color="grey" style={{ marginBottom: 10 }}>
+      <Text variant="b2" color="dark" style={{ marginBottom: 10 }}>
         {phone}
       </Text>
       <Box style={styles.subView}>
-        <Button label="Edit" onPress={() => edit} width={77} />
-        <Box style={{ marginLeft: 35 }} />
-        {trash && <Icon name="trash" color={theme.colors.grey} size={24} />}
+        <Button label="Edit" onPress={() => edit} width={77} height={45} />
+        <Box style={{ marginLeft: 25 }} />
+        {trash && (
+          <Button
+            label="Delete"
+            color={theme.colors.red}
+            onPress={() => edit}
+            width={77}
+            height={45}
+          />
+        )}
       </Box>
     </Box>
   );

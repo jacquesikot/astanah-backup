@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add jwt-decode
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @react-native-community/netinfo@5.9.2
 
 PATH: 
   C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin\;C:\Go\bin;C:\Users\Jack\mongodb-shell-windows-x86_64-4.4.1\mongodb-win32-x86_64-windows-4.4.1\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\Jack\AppData\Local\Microsoft\WindowsApps;;C:\Users\Jack\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Jack\AppData\Roaming\npm;C:\Users\Jack\AppData\Local\Yarn\bin;C:\Program Files\heroku\bin;C:\Users\Jack\go\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\Jack\Documents\code\Astanah-Mobile-App-main\node_modules\@babel\compat-data\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Jack\Documents\code\Astanah-Mobile-App-main\node_modules\@babel\generator\node_modules\.bin'
 
 npm manifest: 
   {
@@ -39,8 +39,10 @@ npm manifest:
       "apisauce": "^2.0.0",
       "expo": "~38.0.8",
       "expo-constants": "^9.1.1",
+      "expo-secure-store": "~9.0.1",
       "expo-status-bar": "^1.0.2",
       "formik": "^2.1.5",
+      "jwt-decode": "^3.1.2",
       "lottie-react-native": "~2.6.1",
       "moment": "^2.29.1",
       "react": "~16.11.0",
@@ -2770,6 +2772,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.0.1.tgz#dc10b58654bbe39bbbed5827369942b01b08055e"
     integrity sha512-CosJgy8XQRN/OFG2JTQDcFxz3XTGi27coCMym/hVXWtQfk0z6PwdRG5IXHfLGuSckwIcgmirrwm2+Zc0X3MmNg==
   
+  expo-secure-store@~9.0.1:
+    version "9.0.1"
+    resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-9.0.1.tgz#e564a2d5392cd1ab883b9b6a7e261c1815d15788"
+    integrity sha512-+XgSZTelr57AyIJIGPcB/+QMrrm7wd8KFaF+TD8eJFwEN3B7s+tZyNoPH2JaJkAY0yh9FqcGG4kE3/YgK7GY3Q==
+  
   expo-splash-screen@^0.5.0:
     version "0.5.0"
     resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.5.0.tgz#cad0eb77a3eade2c7101d169b8655e7ee8053c2f"
@@ -3778,6 +3785,11 @@ Lockfile:
     version "0.0.0"
     resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
     integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
+  
+  jwt-decode@^3.1.2:
+    version "3.1.2"
+    resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+    integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
   
   kind-of@^1.1.0:
     version "1.1.0"

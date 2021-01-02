@@ -153,27 +153,23 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                 marginRight: 20,
               }}
             >
-              {getCategoriesApi.loading ? (
-                <HomeCategorySkeleton data={getCategoriesApi.data} />
-              ) : (
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={getCategoriesApi.data}
-                  keyExtractor={(item: Category) => item.id.toString()}
-                  renderItem={({ item, index }) => (
-                    <TouchableWithoutFeedback
-                      onPress={() =>
-                        navigation.navigate('CategoryDetail', {
-                          category: item,
-                        })
-                      }
-                    >
-                      <HomeCategory category={item} index={index} />
-                    </TouchableWithoutFeedback>
-                  )}
-                />
-              )}
+              <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={getCategoriesApi.data}
+                keyExtractor={(item: Category) => item.id.toString()}
+                renderItem={({ item, index }) => (
+                  <TouchableWithoutFeedback
+                    onPress={() =>
+                      navigation.navigate('CategoryDetail', {
+                        category: item,
+                      })
+                    }
+                  >
+                    <HomeCategory category={item} index={index} />
+                  </TouchableWithoutFeedback>
+                )}
+              />
             </Box>
             <Box style={styles.linkText}>
               <Text variant="h5" color="primary">

@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ThemeProvider } from '@shopify/restyle';
 
-import { LoadAssets, theme } from './src/components';
+import { LoadAssets, theme, OfflineNotice } from './src/components';
 import { RootNav } from './src/navigation';
 import { Provider } from './src/context/context';
 
@@ -31,6 +31,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <LoadAssets {...{ fonts, assets }}>
         <Provider>
+          <OfflineNotice />
           <RootNav />
           <StatusBar backgroundColor={theme.colors.white} />
         </Provider>

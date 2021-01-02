@@ -1,19 +1,12 @@
-import { DeliveryAddress } from "../../types";
+import { BillingInfo } from '../../types';
 
-const addresses: DeliveryAddress[] = [
-  {
-    id: 1,
-    name: "David Tionge",
-    addressDetail:
-      "3711 Spring Hill Rd, undefined Tallahassee Nevada 42568 United States",
-    phone: "+234 965 924 49",
-  },
-  {
-    id: 2,
-    name: "David Tionge",
-    addressDetail: "46D lorong Kampung Bukit Bintang, kular Lumpur, Malaysia",
-    phone: "+234 965 924 49",
-  },
-];
+const addresses: BillingInfo[] = new Array(2).fill({
+  user_id: Math.random(),
+  first_name: 'string',
+  last_name: 'string',
+  address: 'string',
+  city: 'string',
+  state: 'string',
+});
 
 export default addresses;
