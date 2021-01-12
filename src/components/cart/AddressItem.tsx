@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Feather as Icon } from '@expo/vector-icons';
+import React from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
 
 import { BillingInfo } from '../../../types';
 import { theme, Box, Text, Button } from '../../components';
@@ -30,30 +29,58 @@ interface AddressItemProps {
   billing: BillingInfo;
   trash?: any;
   edit?: () => void;
+  borderColor?: 'light' | 'primary';
 }
 
-const AddressItem = ({ billing, trash, edit }: AddressItemProps) => {
-  const { first_name, last_name, address, phone } = billing;
-  const borderColor = theme.colors.light;
+const AddressItem = ({
+  billing,
+  trash,
+  edit,
+  borderColor,
+}: AddressItemProps) => {
+  const {
+    first_name,
+    last_name,
+    address,
+    city,
+    state,
+    country,
+    phone,
+  } = billing;
+  const borderColorValue = borderColor ? borderColor : 'light';
   return (
-    <Box style={[styles.container, { borderColor: borderColor }]}>
-      <Text variant="h4" color="primary" style={{ marginBottom: 10 }}>
+    <Box
+      style={[
+        styles.container,
+        { borderColor: theme.colors[borderColorValue] },
+      ]}
+    >
+      <Text variant="h3" color="primary" style={{ marginBottom: 10 }}>
         {capitalize(first_name) + ' ' + capitalize(last_name)}
       </Text>
-      <Text variant="b2" color="dark" style={{ marginBottom: 10 }}>
-        {address}
+      <Text
+        numberOfLines={2}
+        variant="b1"
+        color="dark"
+        style={{ marginBottom: 10 }}
+      >
+        {`${capitalize(address)}, ${capitalize(city)}, ${capitalize(
+          state
+        )}, ${capitalize(country)}`}
       </Text>
-      <Text variant="b2" color="dark" style={{ marginBottom: 10 }}>
+      <Text variant="b1" color="dark" style={{ marginBottom: 10 }}>
         {phone}
       </Text>
       <Box style={styles.subView}>
-        <Button label="Edit" onPress={() => edit} width={77} height={45} />
+        {edit && (
+          <Button label="Edit" onPress={() => edit} width={77} height={45} />
+        )}
         <Box style={{ marginLeft: 25 }} />
         {trash && (
           <Button
             label="Delete"
             color={theme.colors.red}
-            onPress={() => edit}
+            onPress={trash}
             width={77}
             height={45}
           />

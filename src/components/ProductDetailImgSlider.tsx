@@ -2,11 +2,10 @@ import React, { useRef } from 'react';
 import { StyleSheet, Dimensions, Animated } from 'react-native';
 
 import { Box, Text, theme } from '../components';
-import Banner, { CARD_MARGIN } from './home/Banner';
-import { BannerProps } from '../../types';
+import Banner from './home/Banner';
 
-const { width } = Dimensions.get('window');
-export const SLIDE_HEIGHT = 238;
+const { width, height } = Dimensions.get('window');
+export const SLIDE_HEIGHT = height * 0.46;
 
 const styles = StyleSheet.create({
   container: {
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
   },
   pagination: {
     position: 'absolute',
-    top: 250,
+    top: 350,
     width: '100%',
     height: 20,
     flexDirection: 'row',
@@ -38,13 +37,6 @@ interface ProductDetailImgSliderProps {
 
 const ProductDetailImgSlider = ({ banners }: ProductDetailImgSliderProps) => {
   const scrollX = useRef(new Animated.Value(0)).current;
-  const img1 = banners[0] ? banners[0] : '';
-  const img2 = banners[1] ? banners[1] : '';
-  const img3 = banners[2] ? banners[2] : '';
-  // const img4 = banners[3] ? banners[3] : '';
-  // const img5 = banners[4] ? banners[4] : '';
-
-  const imgArray = [img1, img2, img3];
 
   return (
     <Box style={styles.container}>
@@ -57,25 +49,26 @@ const ProductDetailImgSlider = ({ banners }: ProductDetailImgSliderProps) => {
         bounces={false}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          { useNativeDriver: true }
         )}
         contentContainerStyle={{
           justifyContent: 'center',
         }}
       >
-        {imgArray.map((img, index: any) => {
+        {banners.map((img: string, index: any) => {
           return (
             <Banner
               key={index}
               image={img}
               width={width}
               height={SLIDE_HEIGHT}
+              noBorderRad
             />
           );
         })}
       </Animated.ScrollView>
       <Box style={styles.pagination}>
-        {imgArray.map((_: any, index: any) => {
+        {banners.map((_: any, index: any) => {
           const inputRange = [
             (index - 1) * width,
             index * width,

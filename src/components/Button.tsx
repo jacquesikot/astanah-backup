@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { RectButton, RectButtonProperties } from 'react-native-gesture-handler';
 
 import theme, { Box, Text } from './Theme';
 
@@ -9,7 +9,6 @@ const BUTTON_WIDTH = width - theme.spacing.xl * 2;
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: theme.colors.primary,
     shadowRadius: theme.spacing.s,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.24,
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface ButtonProps {
+interface ButtonProps extends RectButtonProperties {
   label: string;
   onPress: () => void;
   width?: number;
@@ -39,14 +38,16 @@ const Button = ({
   noShadow,
   noBorderRad,
   color,
+  ...props
 }: ButtonProps) => {
   const widthNo = width ? width : BUTTON_WIDTH;
   const heightNo = height ? height : 57;
   const shadowValue = noShadow ? null : styles.shadow;
   const noBorderRadValue = noBorderRad ? 0 : 5;
   const bgColor = color ? color : theme.colors.primary;
+  const shadowColor = color ? color : theme.colors.primary;
   return (
-    <Box style={shadowValue}>
+    <Box style={[shadowValue, { shadowColor: shadowColor }]}>
       <RectButton
         style={[
           styles.container,
@@ -58,6 +59,7 @@ const Button = ({
           },
         ]}
         onPress={onPress}
+        {...props}
       >
         <Text variant="button" color="white">
           {label}

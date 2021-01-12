@@ -3,6 +3,7 @@ import {
   StyleSheet,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
+  Dimensions,
 } from 'react-native';
 
 import { Box } from './Theme';
@@ -15,7 +16,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: theme.spacing.xl,
     height: 46,
-    width: '78%',
     borderWidth: 1,
     borderColor: theme.colors.light,
     borderRadius: theme.spacing.s,
@@ -27,14 +27,18 @@ const styles = StyleSheet.create({
   },
 });
 
+const { width } = Dimensions.get('window');
+const WIDTH = width - theme.spacing.xl * 2;
+
 interface SearchInputProps extends RNTextInputProps {
   placeholder: string;
-  props: any;
+  width?: number;
 }
 
-const SearchInput = ({ placeholder, ...props }: RNTextInputProps) => {
+const SearchInput = ({ placeholder, width, ...props }: SearchInputProps) => {
+  const widthValue = width ? width : WIDTH;
   return (
-    <Box style={styles.container}>
+    <Box style={[styles.container, { width: widthValue }]}>
       <SearchIcon />
       <RNTextInput
         style={styles.textInput}

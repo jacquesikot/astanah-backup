@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     width,
     height: HEADER_HEIGHT,
     alignItems: 'center',
+    justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.light,
     paddingLeft: theme.spacing.xl,
@@ -48,13 +49,12 @@ const StackHeader = ({
           variant="h4"
           color="primary"
           marginLeft="m"
-          style={{ width: width * 0.5 }}
+          style={{ width: width * 0.8 }}
           numberOfLines={1}
         >
           {title}
         </Text>
       </TouchableOpacity>
-      <Box style={{ flex: 1 }} />
       {search ? (
         <TouchableOpacity onPress={search}>
           <SearchIcon color={theme.colors.grey} />

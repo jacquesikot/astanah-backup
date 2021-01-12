@@ -5,6 +5,7 @@ export { default as Home } from './Home';
 export { default as Explore } from './Explore';
 export { default as CategoryDetail } from './CategoryDetail';
 export { default as Search } from './Search';
+export { default as LoadMore } from './LoadMore';
 
 export { default as Cart } from './cart/Cart';
 export { default as ChooseCard } from './cart/ChooseCard';

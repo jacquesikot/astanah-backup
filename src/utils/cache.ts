@@ -41,7 +41,34 @@ const get = async (key: string) => {
   }
 };
 
+const permanentStore = async (key: string, value: any) => {
+  try {
+    const item = {
+      value,
+      timestamp: Date.now(),
+    };
+    await AsyncStorage.setItem(key, JSON.stringify(item));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const permanentGet = async (key: string) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+
+    if (!value) return null;
+
+    const item = JSON.parse(value);
+    return item.value;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
   store,
   get,
+  permanentStore,
+  permanentGet,
 };

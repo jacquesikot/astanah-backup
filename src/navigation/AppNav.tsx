@@ -1,21 +1,21 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { AppNavParamList } from "../../types";
-import HomeNav from "./HomeNav";
-import CartNav from "./CartNav";
-import AccountNav from "./AccountNav";
-import OfferNav from "./OfferNav";
-import { Box, Text, theme } from "../components";
+import { AppNavParamList } from '../../types';
+import HomeNav from './HomeNav';
+import CartNav from './CartNav';
+import AccountNav from './AccountNav';
+import OfferNav from './OfferNav';
+import { Box, Text, theme } from '../components';
 import {
   HomeIcon,
   ExploreIcon,
   CartIcon,
   OfferIcon,
   ProfileIcon,
-} from "../Svg";
-import ExploreNav from "./ExploreNav";
-import { useAppContext } from "../context/context";
+} from '../Svg';
+import ExploreNav from './ExploreNav';
+import { useAppContext } from '../context/context';
 
 const AppStack = createBottomTabNavigator<AppNavParamList>();
 
@@ -26,7 +26,7 @@ const AppNav = () => {
       tabBarOptions={{
         keyboardHidesTabBar: true,
         labelStyle: {
-          fontFamily: "Poppins-Bold",
+          fontFamily: 'Poppins-Bold',
           fontSize: 10,
         },
 
@@ -44,7 +44,7 @@ const AppNav = () => {
         }}
       />
       <AppStack.Screen
-        name="Explore"
+        name="Search"
         component={ExploreNav}
         options={{
           tabBarIcon: ({ color }) => {
@@ -63,9 +63,9 @@ const AppNav = () => {
                 {cart.length > 0 && (
                   <Box
                     style={{
-                      position: "absolute",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      position: 'absolute',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                       borderWidth: 1,
                       width: 16,
                       height: 16,
@@ -78,7 +78,7 @@ const AppNav = () => {
                   >
                     <Text
                       style={{
-                        fontFamily: "Poppins-Bold",
+                        fontFamily: 'Poppins-Bold',
                         fontSize: 11,
                         letterSpacing: 0.5,
                       }}

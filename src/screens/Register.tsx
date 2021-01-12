@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  Keyboard,
 } from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -97,6 +98,7 @@ const Register = ({
   const { logIn } = useAuth();
 
   const handleSubmit = async (userInfo: any) => {
+    Keyboard.dismiss();
     setLoading(true);
     const result = await registerApi(userInfo);
     console.log(result);

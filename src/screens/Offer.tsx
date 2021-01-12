@@ -1,5 +1,5 @@
-import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   Animated,
   Dimensions,
@@ -47,7 +47,7 @@ const Offer = ({
             keyExtractor={({ id }: OfferCardProp) => id.toString()}
             renderItem={({ item, index }: any) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate('OfferDetail')}
+                onPress={() => alert('Offers coming soon')}
                 activeOpacity={0.9}
               >
                 <OfferCard image={item.image} y={y} index={index} />

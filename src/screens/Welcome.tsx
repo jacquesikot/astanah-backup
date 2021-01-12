@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Dimensions, SafeAreaView, Keyboard } from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -17,6 +17,7 @@ import {
 import { AuthParamList } from '../../types';
 import { CloseEye, Eye } from '../Svg';
 import localAuthApi from '../api/localAuth';
+import googleAuthApi from '../api/googleAuth';
 import useAuth from '../hooks/useAuth';
 
 const { width } = Dimensions.get('window');
@@ -77,6 +78,7 @@ const Welcome = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async ({ email, password }: FormProps) => {
+    Keyboard.dismiss();
     setLoading(true);
     const result = await localAuthApi.login(email, password);
     if (!result.ok) {
@@ -87,6 +89,25 @@ const Welcome = ({
     setLoginFailed(false);
     logIn(result.data as string);
     setLoading(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      Keyboard.dismiss();
+      setLoading(true);
+      const result = await googleAuthApi.login();
+      if (!result.ok) {
+        setLoginFailed(true);
+        setLoading(false);
+        return;
+      }
+      setLoginFailed(false);
+      logIn(result.data as string);
+      setLoading(false);
+    } catch (e) {
+      setLoginFailed(true);
+      setLoading(false);
+    }
   };
 
   return (
@@ -187,11 +208,11 @@ const Welcome = ({
         />
       </Box>
       <Box style={{ marginBottom: 10, marginTop: 7 }}>
-        <LoginButton type="Google" onPress={() => alert('Login with Google')} />
+        <LoginButton type="Google" onPress={handleGoogleLogin} />
       </Box>
       <LoginButton
         type="Facebook"
-        onPress={() => alert('Login with Facebook')}
+        onPress={() => alert('Login with Facebook coming soon')}
       />
       <Box marginTop="l">
         <Link

@@ -9,6 +9,7 @@ import {
   ChooseCard,
   Success,
   AddAddress,
+  AddCard,
 } from '../screens';
 
 const CartStack = createStackNavigator<CartNavParamList>();
@@ -23,6 +24,7 @@ const CartNav = () => {
       <CartStack.Screen name="Success" component={Success} />
       <CartStack.Screen name="AddAddress" component={AddAddress} />
       <CartStack.Screen name="EditAddress" component={AddAddress} />
+      <CartStack.Screen name="AddCard" component={AddCard} />
     </CartStack.Navigator>
   );
 };

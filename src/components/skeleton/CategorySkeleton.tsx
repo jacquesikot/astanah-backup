@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 
 import { Box, theme } from '..';
-
-const CIRCLE_WIDTH = 70;
+import { CIRCLE_WIDTH, CIRCLE_MARGIN } from '../home/HomeCategory';
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 25,
+    marginRight: CIRCLE_MARGIN,
     marginVertical: 10,
   },
   circle: {
     width: CIRCLE_WIDTH,
     height: CIRCLE_WIDTH,
-    borderRadius: CIRCLE_WIDTH / 2,
+    borderRadius: 10,
   },
   text: {
     marginTop: theme.spacing.s,
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
 interface CategoriesSkeletonProps {}
 
 const CategoriesSkeleton = () => {
-  const [animation, setAnimation] = useState(new Animated.Value(0));
+  const [animation] = useState(new Animated.Value(0));
 
   useEffect(() => {
     Animated.loop(

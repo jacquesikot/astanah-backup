@@ -11,10 +11,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: theme.colors.red,
     height: 22,
-    position: 'absolute',
-    top: Constants.statusBarHeight,
+    marginTop: Constants.statusBarHeight,
     width: '100%',
-    zIndex: 1,
   },
 });
 

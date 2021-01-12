@@ -1,12 +1,13 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+import { Image } from 'react-native-expo-image-cache';
 import { Feather as Icon } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import theme, { Box, Text } from '../Theme';
 import { numberWithCommas, discountPrecentage } from '../../utils';
 import Ratings from '../Ratings';
-import { Product } from '../../../types';
+import { Product, ProductOrder } from '../../../types';
 
 const { width } = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
 });
 
 interface ProductProps {
-  product: any;
+  product: ProductOrder;
   width?: number;
   height?: number;
   noRating?: boolean;
@@ -51,16 +52,17 @@ const ProductCard = ({
   marginRight,
   trash,
 }: ProductProps) => {
-  const { Title, Sale_price, Regular_price, Meta_thumbnail_id } = product;
-  const finalPrice = Sale_price
-    ? Number(Sale_price).toFixed(2)
-    : Number(Regular_price).toFixed(2);
+  const { title, sale_price, regular_price, meta_thumbnail_id } = product;
+  const finalPrice = sale_price
+    ? Number(sale_price).toFixed(2)
+    : Number(regular_price).toFixed(2);
   const widthNo = width ? width : CARD_WIDTH;
   const heightNo = height ? height : CARD_HEIGHT;
   const imageSize = width ? width - CARD_PADDING * 2 : IMAGE_SIZE;
   const ratingValue = 1;
   const marginBottomValue = marginBottom ? marginBottom : CARD_MARGIN;
   const marginRightValue = marginRight ? marginRight : CARD_MARGIN;
+  const uri = meta_thumbnail_id;
   return (
     <Box
       style={[
@@ -74,9 +76,8 @@ const ProductCard = ({
       ]}
     >
       <Image
-        source={{
-          uri: Meta_thumbnail_id,
-        }}
+        {...{ uri }}
+        tint="light"
         style={{ width: imageSize, height: imageSize, borderRadius: 5 }}
       />
       {trash && (
@@ -92,7 +93,7 @@ const ProductCard = ({
         numberOfLines={2}
         style={{ width: imageSize, marginTop: 10 }}
       >
-        {Title}
+        {title}
       </Text>
 
       <Box
@@ -119,7 +120,7 @@ const ProductCard = ({
         style={{
           flexDirection: 'row',
           width: imageSize,
-          marginTop: 7,
+          marginTop: 2,
         }}
       >
         <Text
@@ -132,7 +133,7 @@ const ProductCard = ({
             letterSpacing: 0.5,
           }}
         >
-          {Sale_price ? 'ZK' + ' ' + Sale_price : null}
+          {sale_price ? 'ZK' + ' ' + Number(regular_price).toFixed(2) : null}
         </Text>
         <Text
           style={{
@@ -142,8 +143,8 @@ const ProductCard = ({
           }}
           color="red"
         >
-          {Sale_price
-            ? discountPrecentage(Number(Sale_price), Number(Regular_price)) +
+          {sale_price
+            ? discountPrecentage(Number(regular_price), Number(sale_price)) +
               '% Off'
             : null}
         </Text>

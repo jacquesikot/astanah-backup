@@ -1,15 +1,15 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Feather as Icon } from "@expo/vector-icons";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Feather as Icon } from '@expo/vector-icons';
 
-import theme, { Box, Text } from "../Theme";
+import theme, { Box, Text } from '../Theme';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
@@ -27,7 +27,7 @@ const HomeLink = ({ label, onPress }: HomeLinkProps) => {
         </Text>
         <Icon
           name="chevron-right"
-          style={{ top: 1 }}
+          style={{ justifyContent: 'center' }}
           color={theme.colors.primary}
         />
       </Box>

@@ -16,6 +16,7 @@ import {
   GenderIcon,
   LocationIcon,
   LockIcon,
+  LogOut,
 } from '../../Svg';
 import useAuth from '../../hooks/useAuth';
 
@@ -53,7 +54,6 @@ const Profile = ({
               label="Basic Information"
               icon={<GenderIcon color={theme.colors.primary} />}
               chevron
-              borderBottom
             />
           </TouchableHighlight>
 
@@ -65,7 +65,6 @@ const Profile = ({
               label="Addresses"
               icon={<LocationIcon color={theme.colors.primary} />}
               chevron
-              borderBottom
             />
           </TouchableHighlight>
           <TouchableHighlight
@@ -76,7 +75,6 @@ const Profile = ({
               label="Payments"
               icon={<CardTransferIcon color={theme.colors.primary} />}
               chevron
-              borderBottom
             />
           </TouchableHighlight>
           <TouchableHighlight
@@ -87,7 +85,6 @@ const Profile = ({
               label="Passwords"
               icon={<LockIcon color={theme.colors.primary} />}
               chevron
-              borderBottom
             />
           </TouchableHighlight>
         </Box>
@@ -97,9 +94,8 @@ const Profile = ({
         >
           <ListItem
             label="Logout"
-            icon={<LockIcon color={theme.colors.red} />}
+            icon={<LogOut color={theme.colors.red} />}
             chevron
-            borderBottom
             textColor="red"
           />
         </TouchableHighlight>

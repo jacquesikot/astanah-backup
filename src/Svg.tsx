@@ -1,8 +1,8 @@
-import React from "react";
-import Svg, { Path, SvgProps } from "react-native-svg";
+import React from 'react';
+import Svg, { Path, SvgProps, Mask, G } from 'react-native-svg';
 
-import { SvgParams } from "../types";
-import { theme } from "./components";
+import { SvgParams } from '../types';
+import { theme } from './components';
 
 //Login Icons
 export const Google = () => (
@@ -657,6 +657,55 @@ export function Eye({ width, color }: SvgProps) {
         clipRule="evenodd"
         d="M7 .5C2.09.5.25 5 .25 5S2.09 9.5 7 9.5c3.682 0 6.75-4.5 6.75-4.5S10.682.5 7 .5zM4.75 5a2.25 2.25 0 104.5 0 2.25 2.25 0 00-4.5 0z"
         fill={color ? color : theme.colors.primary}
+      />
+    </Svg>
+  );
+}
+
+export function Filter({ width, color }: SvgProps) {
+  return (
+    <Svg
+      width={width || 24}
+      height={width || 24}
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <Path
+        d="M3 12h5.625M17.625 3v18L21 17.625M3 5h10.125M3 19h3.375M17.625 21l-3.375-3.375"
+        stroke={color || theme.colors.primary}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+export function LogOut({ width, color }: SvgProps) {
+  return (
+    <Svg
+      width={width || 24}
+      height={width || 24}
+      viewBox="0 0 511 512"
+      fill="none"
+    >
+      <Path
+        d="M361.016 392v40c0 44.113-35.888 80-80.004 80H80.004C35.888 512 0 476.113 0 432V80C0 35.887 35.888 0 80.004 0h201.008c44.116 0 80.004 35.887 80.004 80v40c0 11.047-8.954 20-20.001 20s-20.001-8.953-20.001-20V80c0-22.055-17.946-40-40.002-40H80.004c-22.056 0-40.002 17.945-40.002 40v352c0 22.055 17.946 40 40.002 40h201.008c22.056 0 40.002-17.945 40.002-40v-40c0-11.047 8.954-20 20.001-20s20.001 8.953 20.001 20zm136.361-170.355l-44.787-44.786c-7.813-7.812-20.477-7.812-28.286 0-7.813 7.809-7.813 20.473 0 28.282L456.161 237H216.009c-11.047 0-20 8.953-20 20s8.953 20 20 20h240.152l-31.857 31.859c-7.813 7.809-7.813 20.473 0 28.282A19.937 19.937 0 00438.445 343a19.939 19.939 0 0014.145-5.859l44.787-44.786c19.497-19.496 19.497-51.214 0-70.71z"
+        fill={color || theme.colors.primary}
+      />
+    </Svg>
+  );
+}
+
+export function Alert({ width, color }: SvgProps) {
+  return (
+    <Svg width={width || 24} height={width || 24} viewBox="0 0 24 24">
+      <Path
+        d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 6.375v6.75M12 16.5v1.125"
+        stroke={color || theme.colors.primary}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );

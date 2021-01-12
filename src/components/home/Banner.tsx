@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Image,
-  Dimensions,
-  ImageRequireSource,
-} from 'react-native';
+import { StyleSheet, Dimensions, Image as RNImage } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { StringLocale } from 'yup';
+import { Image } from 'react-native-expo-image-cache';
 
 import { Box, Text } from '../../components';
 import theme from '../Theme';
@@ -21,7 +16,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: theme.spacing.s,
   },
   image: {
     width: '100%',
@@ -36,6 +30,7 @@ interface BannerProps {
   width?: number;
   height?: number;
   src?: any;
+  noBorderRad?: boolean;
 }
 
 const Banner = ({
@@ -45,8 +40,12 @@ const Banner = ({
   width,
   height,
   src,
+  noBorderRad,
 }: BannerProps) => {
   const marginNo = margin ? CARD_MARGIN : 0;
+  const borderRadValue = noBorderRad ? 0 : 5;
+
+  const uri = image || '';
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -57,17 +56,14 @@ const Banner = ({
             marginRight: marginNo,
             width: width ? width : CARD_WIDTH,
             height: height ? height : 206,
+            borderRadius: borderRadValue,
           },
         ]}
       >
         {src ? (
-          <Image source={src} resizeMode="cover" style={styles.image} />
+          <RNImage source={src} resizeMode="cover" style={styles.image} />
         ) : (
-          <Image
-            source={{ uri: image }}
-            resizeMode="cover"
-            style={styles.image}
-          />
+          <Image {...{ uri }} tint="light" style={styles.image} />
         )}
       </Box>
     </TouchableWithoutFeedback>

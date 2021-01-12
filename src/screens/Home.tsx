@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Animated, SafeAreaView, Dimensions } from 'react-native';
-import Constants from 'expo-constants';
-import { StackScreenProps } from '@react-navigation/stack';
+import React, { useEffect } from 'react';
 import {
-  TouchableWithoutFeedback,
+  StyleSheet,
+  Animated,
+  SafeAreaView,
+  Dimensions,
   FlatList,
-} from 'react-native-gesture-handler';
+} from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import {
   Box,
@@ -18,8 +20,6 @@ import {
   ProductCard,
   HomeCategory,
   ErrorLoading,
-  HomeCategorySkeleton,
-  ProductFlatListSkeleton,
   HomeSkeleton,
 } from '../components';
 import { SLIDE_HEIGHT } from '../components/home/BannerSlider';
@@ -30,13 +30,12 @@ import homeBanners from '../data/homeBanner';
 import { useApi } from '../hooks';
 import categoriesApi from '../api/categories';
 import productsApi from '../api/products';
-import { Search } from '.';
 
 const { width } = Dimensions.get('window');
-const NEW_HEADER_HEIGHT = HEADER_HEIGHT + Constants.statusBarHeight;
+const NEW_HEADER_HEIGHT = HEADER_HEIGHT + 10;
 export const CARD_WIDTH = 141;
-export const CARD_HEIGHT = 210;
-export const LOWER_CARD_HEIGHT = 240;
+export const CARD_HEIGHT = 220;
+export const LOWER_CARD_HEIGHT = 250;
 const CARD_SPACING = 30;
 export const LOWER_CARD_WIDTH =
   (width - CARD_SPACING - theme.spacing.xl * 2) / 2;
@@ -66,7 +65,6 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xl,
     marginTop: 20,
     marginRight: -CARD_MARGIN,
-    paddingBottom: 30,
   },
 });
 
@@ -75,13 +73,7 @@ interface HomeProps {}
 const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
   const getCategoriesApi = useApi(categoriesApi.getCategories);
   const getProductsApi = useApi(productsApi.getProducts);
-
-  const [searchModal, setSearchModal] = useState<boolean>(false);
-
-  useEffect(() => {
-    getCategoriesApi.request();
-    getProductsApi.request();
-  }, []);
+  const getSaleProductsApi = useApi(productsApi.getSaleProducts);
 
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, NEW_HEADER_HEIGHT);
@@ -90,18 +82,31 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
     outputRange: [0, -NEW_HEADER_HEIGHT],
   });
 
+  useEffect(() => {
+    getCategoriesApi.request();
+    getProductsApi.request();
+    getSaleProductsApi.request();
+  }, []);
+
+  const offset = 6;
+
+  const t = true;
   return (
     <SafeAreaView style={styles.container}>
-      {getProductsApi.loading || getCategoriesApi.loading ? (
+      {getProductsApi.loading ||
+      getCategoriesApi.loading ||
+      getSaleProductsApi.loading ? (
         <HomeSkeleton />
-      ) : getProductsApi.error || getCategoriesApi.error ? (
+      ) : getProductsApi.error ||
+        getCategoriesApi.error ||
+        getSaleProductsApi.error ? (
         <ErrorLoading reload={getProductsApi.request} />
       ) : (
         <Box>
           <Animated.View
             style={{
-              zIndex: 1000,
-              elevation: 1000,
+              zIndex: 1,
+              elevation: 1,
               position: 'absolute',
               top: 0,
               left: 0,
@@ -112,7 +117,6 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
             <HomeHeader
               favorite={() => navigation.navigate('Favorites')}
               notification={() => navigation.navigate('Notifications')}
-              onFocus={() => alert('pressed')}
             />
           </Animated.View>
           <Animated.ScrollView
@@ -125,7 +129,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                   nativeEvent: { contentOffset: { y: scrollY } },
                 },
               ],
-              { useNativeDriver: false }
+              { useNativeDriver: true }
             )}
           >
             <Box style={styles.banner}>
@@ -133,7 +137,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
             </Box>
             <Box style={styles.linkText}>
               <Text variant="h5" color="primary">
-                Category
+                Top Categories
               </Text>
               <Box style={{ flex: 1 }} />
               <HomeLink
@@ -150,7 +154,6 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                 marginBottom: 15,
                 alignItems: 'center',
                 paddingLeft: 20,
-                marginRight: 20,
               }}
             >
               <FlatList
@@ -173,7 +176,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
             </Box>
             <Box style={styles.linkText}>
               <Text variant="h5" color="primary">
-                Sale
+                Sales
               </Text>
               <Box style={{ flex: 1 }} />
               <HomeLink
@@ -181,42 +184,30 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                 onPress={() => navigation.navigate('Sale')}
               />
             </Box>
-            <Box style={{ paddingLeft: 20, paddingRight: 20 }}>
-              {getProductsApi.loading ? (
-                <ProductFlatListSkeleton
-                  data={getProductsApi.data}
-                  horizontal={true}
-                  scrollIndicator={false}
-                  width={CARD_WIDTH}
-                  height={CARD_HEIGHT}
-                  numColummns={undefined}
-                  marginRight={10}
-                />
-              ) : (
-                <FlatList // Limit the content of the flatlist
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={getProductsApi.data}
-                  keyExtractor={(item: Product) => item.id.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableWithoutFeedback
-                      onPress={() =>
-                        navigation.navigate('ProductDetail', { product: item })
-                      }
-                    >
-                      <ProductCard
-                        product={item}
-                        width={CARD_WIDTH}
-                        height={CARD_HEIGHT}
-                        marginRight={10}
-                      />
-                    </TouchableWithoutFeedback>
-                  )}
-                />
-              )}
+            <Box style={{ paddingLeft: 20 }}>
+              <FlatList // Limit the content of the flatlist
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={getSaleProductsApi.data}
+                keyExtractor={(item: Product) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableWithoutFeedback
+                    onPress={() =>
+                      navigation.navigate('ProductDetail', { product: item })
+                    }
+                  >
+                    <ProductCard
+                      product={item}
+                      width={CARD_WIDTH}
+                      height={CARD_HEIGHT}
+                      marginRight={10}
+                    />
+                  </TouchableWithoutFeedback>
+                )}
+              />
             </Box>
             <Box
-              style={{ alignItems: 'center', marginRight: -20, marginTop: 20 }}
+              style={{ alignItems: 'center', marginRight: -20, marginTop: 10 }}
             >
               <Banner
                 src={require('../../assets/offer/offer2.jpg')}
@@ -238,7 +229,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
               <FlatList // Limit the content of the flatlist
                 numColumns={2}
                 showsHorizontalScrollIndicator={false}
-                data={getProductsApi.data}
+                data={getProductsApi.data.slice(0, offset)}
                 keyExtractor={(item: Product) => item.id.toString()}
                 renderItem={({ item }) => (
                   <TouchableWithoutFeedback
@@ -254,6 +245,12 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                     />
                   </TouchableWithoutFeedback>
                 )}
+              />
+            </Box>
+            <Box style={{ marginBottom: 20 }}>
+              <HomeLink
+                label="Load more"
+                onPress={() => navigation.navigate('LoadMore', { offset })}
               />
             </Box>
           </Animated.ScrollView>

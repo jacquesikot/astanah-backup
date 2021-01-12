@@ -15,6 +15,7 @@ export { default as ActivityIndicator } from './ActivityIndicator';
 export { default as ErrorLoading } from './ErrorLoading';
 export { default as Counter } from './Counter';
 export { default as OfflineNotice } from './OfflineNotice';
+export { default as NoContent } from './NoContent';
 
 export { default as LoginButton } from './form/LoginButton';
 export { default as TextInput } from './form/TextInput';

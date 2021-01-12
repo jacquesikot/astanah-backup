@@ -4,7 +4,7 @@ import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
-import { AccountNavParamList, User } from '../../../types';
+import { AccountNavParamList } from '../../../types';
 import { useAppContext } from '../../context/context';
 import {
   Box,

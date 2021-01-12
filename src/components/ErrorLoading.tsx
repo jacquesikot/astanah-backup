@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
   errorMessage: {
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
+    width: width - theme.spacing.xl * 2,
   },
 });
 
@@ -32,7 +34,7 @@ const ErrorLoading = ({ message, reload, buttonText }: ErrorLoadingProps) => {
         style={{ width: 287, height: 218.5 }}
       />
       <Text
-        variant="h4"
+        variant="b2"
         color="primary"
         marginTop="m"
         style={styles.errorMessage}
@@ -44,6 +46,7 @@ const ErrorLoading = ({ message, reload, buttonText }: ErrorLoadingProps) => {
       <Box style={{ marginTop: 20 }}>
         <Button
           label={buttonText ? buttonText : 'Try Again'}
+          noShadow
           onPress={reload}
           width={200}
           height={57}

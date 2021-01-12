@@ -7,7 +7,10 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import {
@@ -22,11 +25,12 @@ import {
   ProductCard,
   QuantityModal,
 } from '../components';
-import { HomeNavParamList } from '../../types';
-import { numberWithCommas } from '../utils';
+import { HomeNavParamList, Product } from '../../types';
+import { discountPrecentage, numberWithCommas } from '../utils';
 import { useAppContext } from '../context/context';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
+import storage from '../utils/cache';
 
 const { width, height } = Dimensions.get('window');
 const CARD_WIDTH = 141;
@@ -51,12 +55,29 @@ const styles = StyleSheet.create({
   rowBox: {
     flexDirection: 'row',
     paddingLeft: 20,
-    paddingRight: 20,
   },
   button: {
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 100,
+  },
+  likeButton: {
+    borderWidth: 1,
+    width: 70,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: theme.colors.light,
+    position: 'absolute',
+    left: width - 70,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    bottom: 1,
+  },
+  discount: {
+    marginLeft: theme.spacing.xl,
+    marginTop: 3,
+    flexDirection: 'row',
   },
 });
 
@@ -67,85 +88,150 @@ const ProductDetail = ({
   route,
 }: StackScreenProps<HomeNavParamList, 'ProductDetail'>) => {
   const { isProductInCart } = useAppContext();
-  const [modal, setModal] = useState<boolean>(false);
 
   const { product } = route.params;
 
-  const {
-    Title,
-    Meta_thumbnail_id,
-    Regular_price,
-    Sale_price,
-    Short_Desc,
-    Gallery,
-  } = product;
-  const price = Number(Regular_price).toFixed(2);
-  const salePrice = Number(Sale_price).toFixed(2);
+  const [modal, setModal] = useState<boolean>(false);
+  const [touched, setTouched] = useState<boolean>(false);
 
-  const getProductsApi = useApi(productsApi.getProducts);
+  const {
+    title,
+    regular_price,
+    sale_price,
+    short_description,
+    gallery,
+    categories,
+  } = product;
+
+  const price = Number(regular_price).toFixed(2);
+  const salePrice = Number(sale_price).toFixed(2);
+
+  const getProductsApi = useApi(productsApi.getProductsByCategory);
+
+  const check = async (product: Product) => {
+    try {
+      const data = await storage.permanentGet('user_favorites');
+      if (data.find((favorite: Product) => favorite.id === product.id))
+        return true;
+      return false;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setTouchedButton = async () => {
+    if (await check(product)) return setTouched(true);
+    return setTouched(false);
+  };
 
   useEffect(() => {
-    getProductsApi.request();
+    setTouchedButton();
+    getProductsApi.request(categories);
   }, []);
+
+  const addToFavorites = async (product: Product) => {
+    try {
+      if (await check(product)) {
+        return;
+      }
+
+      const favoritesArray = await storage.permanentGet('user_favorites');
+      const newFavorites = [...favoritesArray, product];
+
+      await storage.permanentStore('user_favorites', newFavorites);
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeFromFavorites = async (product: Product) => {
+    try {
+      const favoritesArray = await storage.permanentGet('user_favorites');
+      const updatedFavorites = favoritesArray.filter(
+        (favorite: Product) => favorite.id !== product.id
+      );
+
+      await storage.permanentStore('user_favorites', updatedFavorites);
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFavorites = async () => {
+    try {
+      if (await check(product)) {
+        await removeFromFavorites(product);
+        setTouched(false);
+        alert('Removed from favorites');
+        return;
+      }
+      await addToFavorites(product);
+      setTouched(true);
+      alert('Added to favorites');
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const images = gallery.split(', ');
 
   return (
     <SafeAreaView style={styles.container}>
       <Box>
-        <StackHeader title={Title} back={() => navigation.goBack()} />
+        <StackHeader title={title} back={() => navigation.goBack()} />
         <ScrollView
           scrollEventThrottle={16}
           bounces={false}
           showsVerticalScrollIndicator={false}
         >
-          {/* <ProductDetailImgSlider banners={} /> */}
-          <Box
-            style={{
-              width: width * 0.9,
-              height: height * 0.4,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Image
-              source={{ uri: Meta_thumbnail_id }}
-              style={{
-                width: width * 0.8,
-                height: height * 0.45,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            />
-          </Box>
+          <ProductDetailImgSlider banners={images} />
+
           <Box style={styles.titleBox}>
             <Text
-              numberOfLines={3}
-              variant="h4"
+              numberOfLines={2}
+              variant="h3"
               color="primary"
-              style={{ width: width * 0.78 }}
+              style={{ width: width - theme.spacing.xl * 2 }}
             >
-              {Title}
+              {title}
             </Text>
-            <Box style={{ flex: 1 }} />
-            <LikeButton />
           </Box>
           <Box style={styles.rowBox}>
             <Ratings rating={1} size={18} />
             <Box style={{ flex: 1 }} />
           </Box>
           <Box style={styles.rowBox}>
-            <Text
-              variant="h3"
-              color="secondary"
-              marginTop="s"
-              letterSpacing={1}
-            >
-              {Sale_price
+            <Text variant="h3" color="secondary" marginTop="s">
+              {sale_price
                 ? 'ZK' + ' ' + numberWithCommas(Number(salePrice))
                 : 'ZK' + ' ' + numberWithCommas(Number(price))}
             </Text>
             <Box style={{ flex: 1 }} />
+            <Box style={styles.likeButton}>
+              <TouchableOpacity onPress={handleFavorites}>
+                <LikeButton touched={touched} />
+              </TouchableOpacity>
+            </Box>
           </Box>
-
+          <Box style={styles.discount}>
+            <Text variant="b2B" color="grey" textDecorationLine="line-through">
+              {sale_price
+                ? 'ZK' + ' ' + numberWithCommas(Number(regular_price))
+                : ''}
+            </Text>
+            <Box style={{ width: 5 }} />
+            <Text variant="b2B" color="red">
+              {sale_price
+                ? discountPrecentage(
+                    Number(regular_price),
+                    Number(sale_price)
+                  ) + '%Off'
+                : ''}
+            </Text>
+          </Box>
           <Box style={styles.rowBox}>
             <Text variant="h4" color="primary" marginTop="m" marginBottom="m">
               Description
@@ -153,12 +239,14 @@ const ProductDetail = ({
             <Box style={{ flex: 1 }} />
           </Box>
           <Box style={{ paddingLeft: 20, paddingRight: 20 }}>
-            <Text variant="b3" color="grey" style={{ lineHeight: 20 }}>
-              {Short_Desc ? Short_Desc : 'Sorry, no description available'}
+            <Text variant="b3" color="dark" style={{ lineHeight: 20 }}>
+              {short_description
+                ? short_description
+                : 'Sorry, no description available'}
             </Text>
           </Box>
           <Box style={styles.rowBox}>
-            <Text variant="h4" color="primary" marginTop="m" marginBottom="m">
+            <Text variant="h4" color="primary" marginTop="xl" marginBottom="m">
               You Might Also Like
             </Text>
             <Box style={{ flex: 1 }} />
@@ -187,6 +275,7 @@ const ProductDetail = ({
           </Box>
           <Box style={styles.button}>
             <Button
+              noShadow
               label="Add to Cart"
               onPress={() => {
                 if (isProductInCart(product))

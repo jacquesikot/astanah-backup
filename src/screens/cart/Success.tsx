@@ -1,16 +1,16 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { CommonActions } from "@react-navigation/native";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
-import { Box, Text, theme, Button } from "../../components";
-import { CheckIcon } from "../../Svg";
-import { StackScreenProps } from "@react-navigation/stack";
-import { CartNavParamList } from "../../../types";
+import { Box, Text, theme, Button } from '../../components';
+import { CheckIcon } from '../../Svg';
+import { StackScreenProps } from '@react-navigation/stack';
+import { CartNavParamList } from '../../../types';
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     backgroundColor: theme.colors.white,
   },
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 36,
     backgroundColor: theme.colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: theme.colors.primary,
     shadowRadius: theme.spacing.s,
     shadowOffset: { width: 0, height: 10 },
@@ -33,7 +33,7 @@ interface SuccessProps {}
 
 const Success = ({
   navigation,
-}: StackScreenProps<CartNavParamList, "Success">) => {
+}: StackScreenProps<CartNavParamList, 'Success'>) => {
   return (
     <Box style={styles.container}>
       <Box style={styles.circle}>
@@ -42,16 +42,17 @@ const Success = ({
       <Text variant="h2" color="primary" marginTop="l">
         Success
       </Text>
-      <Text variant="b2" color="grey" marginTop="l" marginBottom="xl">
-        thank you for shopping with Astanah
+      <Text variant="b2" color="dark" marginTop="l" marginBottom="xl">
+        Thank you for shopping with Astanah
       </Text>
       <Button
-        label="Back To Order"
+        noShadow
+        label="Continue Shopping"
         onPress={() =>
           navigation.dispatch(
             CommonActions.reset({
               index: 1,
-              routes: [{ name: "Home" }],
+              routes: [{ name: 'Home' }],
             })
           )
         }

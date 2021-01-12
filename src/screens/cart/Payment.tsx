@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Dimensions,
-  FlatList,
-} from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { TouchableHighlight, FlatList } from 'react-native-gesture-handler';
 
 import { Box, ListItem, StackHeader, Text, theme } from '../../components';
 import { BankTransferIcon, CardTransferIcon, PayPalIcon } from '../../Svg';
@@ -14,9 +8,14 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { CartNavParamList, PaymentOptions } from '../../../types';
 
 const paymentOptions: PaymentOptions[] = [
-  { id: 1, title: 'Credit Card or Debit Card', icon: <CardTransferIcon /> },
-  { id: 2, title: 'PayPal', icon: <PayPalIcon /> },
-  { id: 3, title: 'Bank Transfer', icon: <BankTransferIcon /> },
+  {
+    id: 1,
+    title: 'Credit Card or Debit Card',
+    icon: <CardTransferIcon />,
+    method: 'card',
+  },
+  { id: 2, title: 'PayPal', icon: <PayPalIcon />, method: 'paypal' },
+  { id: 3, title: 'Bank Transfer', icon: <BankTransferIcon />, method: 'cash' },
 ];
 
 const { height } = Dimensions.get('window');

@@ -3,7 +3,7 @@ import { StyleSheet, Modal, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Feather as Icon } from '@expo/vector-icons';
 
-import { Box, Text, theme, Button, Counter } from '../../components';
+import { Box, Text, theme, Button } from '../../components';
 import { useAppContext } from '../../context/context';
 import { ProductOrder } from '../../../types';
 
@@ -120,16 +120,19 @@ const QuantityModal = ({
           </Box>
           <Box style={styles.buttonContainer}>
             <Button
+              noShadow
               label="Close"
               onPress={() => {
                 manageCart('REMOVE_FROM_CART', product);
                 closeModal();
+                setQuantity(1);
               }}
               width={BUTTON_WIDTH}
               color={theme.colors.red}
             />
             <Box style={{ flex: 1 }} />
             <Button
+              noShadow
               label="Done"
               width={BUTTON_WIDTH}
               onPress={() => {

@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-} from 'react-native';
+import { Dimensions, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 import {
   Box,
@@ -76,7 +71,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   addToCart: {
-    marginTop: 10,
+    marginTop: 40,
   },
   noItem: {
     marginBottom: 20,
@@ -98,22 +93,17 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
         {cart.length > 0 ? (
           <>
             <Box style={{ height: height * 0.355 }}>
-              <ScrollView
-                scrollEventThrottle={16}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 10 }}
-              >
-                {cart.map((product, index) => {
-                  return (
-                    <CartItem
-                      key={index}
-                      product={product}
-                      margin={10}
-                      deleteItem={() => manageCart('REMOVE_FROM_CART', product)}
-                    />
-                  );
-                })}
-              </ScrollView>
+              <FlatList
+                data={cart}
+                keyExtractor={(item: ProductOrder) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <CartItem
+                    product={item}
+                    margin={10}
+                    deleteItem={() => manageCart('REMOVE_FROM_CART', item)}
+                  />
+                )}
+              />
             </Box>
             <Box style={styles.couponContainer}>
               <Box style={styles.textInput}>
@@ -144,7 +134,7 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
                 </Text>
                 <Box style={{ flex: 1 }} />
                 <Text variant="b2" color="primary">
-                  {'ZK' + ' ' + cartTotal}
+                  {'ZK' + ' ' + numberWithCommas(cartTotal)}
                 </Text>
               </Box>
               <Box style={styles.summaryItem}>
@@ -186,7 +176,8 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
             </Box>
             <Box style={styles.addToCart}>
               <Button
-                label="Check Out"
+                noShadow
+                label="Shipping Address"
                 onPress={() => navigation.navigate('ShipTo')}
               />
             </Box>

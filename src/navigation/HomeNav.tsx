@@ -11,6 +11,7 @@ import {
   Sale,
   CategoryDetail,
   Search,
+  LoadMore,
 } from '../screens';
 
 const AuthStack = createStackNavigator<HomeNavParamList>();
@@ -25,7 +26,7 @@ const HomeNav = () => {
       <AuthStack.Screen name="CategoryDetail" component={CategoryDetail} />
       <AuthStack.Screen name="Categories" component={Categories} />
       <AuthStack.Screen name="Sale" component={Sale} />
-      <AuthStack.Screen name="Search" component={Search} />
+      <AuthStack.Screen name="LoadMore" component={LoadMore} />
     </AuthStack.Navigator>
   );
 };

@@ -50,20 +50,11 @@ const Password = ({
         }}
         onSubmit={(values) => console.log(values)}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, errors, touched }) => (
           <Box style={{ height }}>
-            <Text variant="h5" color="primary" marginLeft="xl" marginTop="xl">
-              Old Password
-            </Text>
             <Box style={styles.form}>
               <TextInput
+                placeholder="Old Password"
                 autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={true}
@@ -80,11 +71,9 @@ const Password = ({
                 </Text>
               )}
             </Box>
-            <Text variant="h5" color="primary" marginLeft="xl">
-              New Password
-            </Text>
             <Box style={styles.form}>
               <TextInput
+                placeholder="New Password"
                 autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={true}
@@ -101,11 +90,9 @@ const Password = ({
                 </Text>
               )}
             </Box>
-            <Text variant="h5" color="primary" marginLeft="xl">
-              New Password Again
-            </Text>
             <Box style={styles.form}>
               <TextInput
+                placeholder="New Password Again"
                 autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={true}
@@ -122,8 +109,8 @@ const Password = ({
                 </Text>
               )}
             </Box>
-            <Box style={[styles.form, { marginTop: height * 0.23 }]}>
-              <Button label="Save" onPress={handleSubmit} />
+            <Box style={[styles.form, { marginTop: height * 0.4 }]}>
+              <Button noShadow label="Save" onPress={handleSubmit} />
             </Box>
           </Box>
         )}

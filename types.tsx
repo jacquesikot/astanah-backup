@@ -29,19 +29,17 @@ export type HomeNavParamList = {
   CategoryDetail: { category: Category };
   Categories: { categories: Category[] };
   Sale: undefined;
-  Search: undefined;
+  LoadMore: { offset: number };
 };
 
 export type ExploreNavParamList = {
   Explore: undefined;
-  CategoryDetail: { category: Category };
-  Favorites: undefined;
-  Notifications: undefined;
+  ProductDetails: { product: ProductOrder };
 };
 
 export type AppNavParamList = {
   Home: undefined;
-  Explore: undefined;
+  Search: undefined;
   Cart: undefined;
   Offer: undefined;
   Account: undefined;
@@ -50,11 +48,12 @@ export type AppNavParamList = {
 export type CartNavParamList = {
   Cart: undefined;
   ShipTo: undefined;
-  Payment: { address: BillingInfo };
+  Payment: undefined;
   ChooseCard: undefined;
   AddAddress: undefined;
-  EditAddress: { address: BillingInfo };
+  EditAddress: undefined;
   Success: undefined;
+  AddCard: undefined;
 };
 
 export type AccountNavParamList = {
@@ -94,6 +93,8 @@ export interface AppContext {
     quantity?: number
   ) => void;
   cartTotal: number;
+  address: any;
+  setAddress: any;
 }
 
 export type ACTIONS =
@@ -115,32 +116,25 @@ interface ImageProps {
 // Product
 export interface Product {
   id: number;
-  Meta_thumbnail_id: string;
-  Title: string;
-  Description: string;
-  Short_Desc: string;
-  Regular_price: string;
-  Sale_price: string;
-  Gallery: string;
-  Categories: string;
+  meta_thumbnail_id: string;
+  title: string;
+  description: string;
+  short_description: string;
+  regular_price: string;
+  sale_price: string;
+  gallery: string;
+  categories?: string;
+  stock_quantity: string;
+  slug?: string;
 }
 
-export interface ProductOrder {
-  id: number;
-  Meta_thumbnail_id: string;
-  Title: string;
-  Description: string;
-  Short_Desc: string;
-  Regular_price: string;
-  Sale_price: string;
-  Gallery: string;
-  Categories: string;
+export interface ProductOrder extends Product {
   count?: number;
 }
 
 // Address Content
 export interface BillingInfo {
-  id: number;
+  id?: number;
   user_id: number;
   first_name: string;
   last_name: string;
@@ -183,9 +177,10 @@ export interface NotificationProp {
 
 export interface CustomerCardDetailsProp {
   id: number;
-  cardNumber: string;
-  cardHolder: string;
-  date: string;
+  user_id: number;
+  card_number: string;
+  card_holder_name: string;
+  card_exp_date: string;
 }
 
 // Offer Card
@@ -198,5 +193,6 @@ export interface OfferCardProp {
 export interface PaymentOptions {
   id: number;
   title: string;
+  method: string;
   icon: ReactNode;
 }

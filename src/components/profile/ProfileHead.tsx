@@ -12,8 +12,6 @@ const styles = StyleSheet.create({
     height: 110,
     width,
     padding: theme.spacing.xl,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.light,
     backgroundColor: theme.colors.white,
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Dimensions } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
 import {
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.white,
     flex: 1,
+    alignItems: 'center',
   },
   noItem: {
     marginBottom: 20,
@@ -27,18 +28,20 @@ const styles = StyleSheet.create({
 
 interface BillingSkeletonProps {
   back: any;
+  title?: string;
+  buttonText?: string;
 }
 
-const BillingSkeleton = ({ back }: BillingSkeletonProps) => {
+const { height } = Dimensions.get('window');
+
+const BillingSkeleton = ({ back, title, buttonText }: BillingSkeletonProps) => {
+  const titleValue = title ? title : 'Address';
+  const buttonTextValue = buttonText ? buttonText : 'Add Address';
   return (
     <SafeAreaView style={styles.container}>
-      <Box style={{ alignItems: 'center' }}>
-        <StackHeader title="Address" back={() => back} />
-        <Box
-          marginTop="s"
-          marginBottom="m"
-          style={{ height: '75%', paddingBottom: 10 }}
-        >
+      <Box style={{ alignItems: 'center', height: height * 0.8 }}>
+        <StackHeader title={titleValue} back={() => back} />
+        <Box marginTop="s" marginBottom="m">
           <FlatList
             showsVerticalScrollIndicator={false}
             data={addresses}
@@ -46,7 +49,13 @@ const BillingSkeleton = ({ back }: BillingSkeletonProps) => {
             renderItem={({ item }) => <BillingCardSkeleton trash />}
           />
         </Box>
-        <Button label="Add Address" onPress={() => true} />
+      </Box>
+      <Box style={{ height: height * 0.2 }}>
+        <Button
+          label={buttonTextValue}
+          onPress={() => true}
+          color={theme.colors.grey}
+        />
       </Box>
     </SafeAreaView>
   );

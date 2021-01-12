@@ -1,27 +1,29 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Animated } from 'react-native';
-import { CustomerCardDetailsProp } from '../../../types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { Box, theme, Text } from '../../components';
+import { Box, theme, Text, Button } from '../../components';
+import { capitalize, spaceString } from '../../utils';
+import { CustomerCardDetailsProp } from '../../../types';
+import { TrashIcon } from '../../Svg';
 
 const { width, height: wHeight } = Dimensions.get('window');
-const height = wHeight - 64;
-const CARD_HEIGHT = 190 + 20; // 20 here is the verticalMargin in ChooseCard screen
 
 const styles = StyleSheet.create({
   container: {
     width: width - theme.spacing.xl * 2,
     height: 200,
-    borderRadius: 20,
+    borderRadius: 5,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.offWhite,
   },
   circle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: theme.colors.black,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: theme.colors.primary,
     opacity: 0.3,
     position: 'absolute',
     bottom: 20,
@@ -29,50 +31,36 @@ const styles = StyleSheet.create({
   circleContainer: {
     flexDirection: 'row',
   },
+  trash: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: theme.colors.light,
+  },
 });
 
 interface CustomerCardProps {
   customerCard: CustomerCardDetailsProp;
-  y: Animated.Value;
-  index: number;
+  borderColor: 'light' | 'primary';
+  deleteItem?: any;
 }
 
-const CustomerCard = ({ customerCard, y, index }: CustomerCardProps) => {
-  const position = Animated.subtract(index * CARD_HEIGHT, y);
-  const isDisappearing = -CARD_HEIGHT;
-  const isTop = 0;
-  const isBottom = height - CARD_HEIGHT;
-  const isAppearing = height;
-  const translateY = Animated.add(
-    Animated.add(
-      y,
-      y.interpolate({
-        inputRange: [0, 0.00001 + index * CARD_HEIGHT],
-        outputRange: [0, -index * CARD_HEIGHT],
-        extrapolateRight: 'clamp',
-      })
-    ),
-    position.interpolate({
-      inputRange: [isBottom, isAppearing],
-      outputRange: [0, -CARD_HEIGHT / 4],
-      extrapolate: 'clamp',
-    })
-  );
-  const scale = position.interpolate({
-    inputRange: [isDisappearing, isTop, isBottom, isAppearing],
-    outputRange: [0.5, 1, 1, 0.5],
-    extrapolate: 'clamp',
-  });
-  const opacity = position.interpolate({
-    inputRange: [isDisappearing, isTop, isBottom, isAppearing],
-    outputRange: [0.5, 1, 1, 0.5],
-  });
-  const { cardNumber, cardHolder, date } = customerCard;
+const CustomerCard = ({
+  customerCard,
+  borderColor,
+  deleteItem,
+}: CustomerCardProps) => {
+  const { card_number, card_holder_name, card_exp_date } = customerCard;
+  const borderColorValue = borderColor ? borderColor : 'light';
   return (
     <Animated.View
       style={[
         styles.container,
-        { opacity, transform: [{ translateY }, { scale }] },
+        { borderColor: theme.colors[borderColorValue] },
       ]}
     >
       <Box style={{ width: width - 80, paddingTop: theme.spacing.xl * 1.5 }}>
@@ -80,26 +68,31 @@ const CustomerCard = ({ customerCard, y, index }: CustomerCardProps) => {
           <Box style={styles.circle} />
           <Box style={[styles.circle, { left: 13 }]} />
         </Box>
-        <Text variant="h2" color="white">
-          {cardNumber}
+        <Text variant="h1" letterSpacing={2} color="primary">
+          {spaceString(card_number, 4).join(' ')}
         </Text>
         <Box style={{ flexDirection: 'row', marginTop: 20 }}>
           <Box>
-            <Text variant="b3" color="grey">
+            <Text variant="b2" color="grey">
               CARD HOLDER
             </Text>
-            <Text variant="b3B" color="white">
-              {cardHolder}
+            <Text variant="b2B" color="primary">
+              {capitalize(card_holder_name)}
             </Text>
           </Box>
-          <Box style={{ marginLeft: 30 }}>
-            <Text variant="b3" color="grey">
+          <Box style={{ marginLeft: 30, marginRight: 50 }}>
+            <Text variant="b2" color="grey">
               EXP DATE
             </Text>
-            <Text variant="b3B" color="white">
-              {date}
+            <Text variant="b2B" color="primary">
+              {card_exp_date}
             </Text>
           </Box>
+          {deleteItem && (
+            <TouchableOpacity onPress={deleteItem} style={styles.trash}>
+              <TrashIcon width={18} height={18} color={theme.colors.red} />
+            </TouchableOpacity>
+          )}
           <Box style={{ flex: 1 }} />
         </Box>
       </Box>

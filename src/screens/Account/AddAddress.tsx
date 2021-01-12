@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  Keyboard,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Yup from 'yup';
@@ -61,19 +67,22 @@ const AddAddress = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
+  const inputRef = useRef(null);
+
   const { user } = useAppContext();
 
   const getBillingApi = useApi(billingApi.addBilling);
 
   const handleSubmit = async (billingInfo: BillingInfo) => {
+    Keyboard.dismiss();
     setLoading(true);
     await getBillingApi.request(billingInfo);
     if (getBillingApi.error) {
       setError(true);
       return setLoading(false);
     }
-    setLoading(false);
-    return;
+    navigation.navigate('Profile');
+    return setLoading(false);
   };
 
   return (
@@ -81,194 +90,186 @@ const AddAddress = ({
       <ActivityIndicator visible={loading} opacity={0.8} />
       <StackHeader title="Add Address" back={() => navigation.goBack()} />
       <ScrollView decelerationRate={16} bounces={false}>
-        <Formik
-          validationSchema={AddressSchema}
-          initialValues={{
-            user_id: user.id,
-            first_name: '',
-            last_name: '',
-            address: '',
-            city: '',
-            state: '',
-            postcode: '',
-            country: '',
-            phone: '',
-          }}
-          onSubmit={handleSubmit}
-        >
-          {({ handleChange, handleBlur, handleSubmit, errors, touched }) => (
-            <Box style={{ height: height * 1.35 }}>
-              <ErrorMessage
-                error="An unexpected error has occured. Try again.."
-                visible={error}
-              />
-              <Text variant="h5" color="primary" marginLeft="xl" marginTop="xl">
-                First Name
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="name"
-                  onChangeText={handleChange('first_name')}
-                  onBlur={handleBlur('first_name')}
-                  error={errors.first_name}
-                  touched={touched.first_name}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.first_name}
-                  </Text>
-                )}
+        <KeyboardAvoidingView behavior="padding">
+          <Formik
+            validationSchema={AddressSchema}
+            initialValues={{
+              user_id: user.id,
+              first_name: '',
+              last_name: '',
+              address: '',
+              city: '',
+              state: '',
+              postcode: '',
+              country: '',
+              phone: '',
+            }}
+            onSubmit={handleSubmit}
+          >
+            {({ handleChange, handleBlur, handleSubmit, errors, touched }) => (
+              <Box style={{ marginBottom: 100 }}>
+                <Box style={{ alignItems: 'center', marginTop: 10 }}>
+                  <ErrorMessage
+                    error="An unexpected error has occured. Try again"
+                    visible={error}
+                  />
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="First Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="name"
+                    onChangeText={handleChange('first_name')}
+                    onBlur={handleBlur('first_name')}
+                    error={errors.first_name}
+                    touched={touched.first_name}
+                    returnKeyType="next"
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.first_name}
+                    </Text>
+                  )}
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="Last Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="name"
+                    onChangeText={handleChange('last_name')}
+                    onBlur={handleBlur('last_name')}
+                    error={errors.last_name}
+                    touched={touched.last_name}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.last_name}
+                    </Text>
+                  )}
+                </Box>
+
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="Street Address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="streetAddressLine1"
+                    onChangeText={handleChange('address')}
+                    onBlur={handleBlur('address')}
+                    error={errors.address}
+                    touched={touched.address}
+                    multiline
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.address}
+                    </Text>
+                  )}
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="City"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="addressCity"
+                    onChangeText={handleChange('city')}
+                    onBlur={handleBlur('city')}
+                    error={errors.city}
+                    touched={touched.city}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.city}
+                    </Text>
+                  )}
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="State/province/region"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="addressState"
+                    onChangeText={handleChange('state')}
+                    onBlur={handleBlur('state')}
+                    error={errors.state}
+                    touched={touched.state}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.state}
+                    </Text>
+                  )}
+                </Box>
+
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="Postcode"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="postalCode"
+                    onChangeText={handleChange('postcode')}
+                    onBlur={handleBlur('postcode')}
+                    error={errors.postcode}
+                    touched={touched.postcode}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.postcode}
+                    </Text>
+                  )}
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="Country"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="default"
+                    textContentType="addressState"
+                    onChangeText={handleChange('country')}
+                    onBlur={handleBlur('country')}
+                    error={errors.country}
+                    touched={touched.country}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.country}
+                    </Text>
+                  )}
+                </Box>
+                <Box style={styles.form}>
+                  <TextInput
+                    placeholder="Phone Number"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="phone-pad"
+                    textContentType="telephoneNumber"
+                    onChangeText={handleChange('phone')}
+                    onBlur={handleBlur('phone')}
+                    error={errors.phone}
+                    touched={touched.phone}
+                  />
+                  {errors && (
+                    <Text variant="b3" color="red">
+                      {errors.phone}
+                    </Text>
+                  )}
+                </Box>
+
+                <Box style={styles.form}>
+                  <Button noShadow label="Add Address" onPress={handleSubmit} />
+                </Box>
               </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                Last Name
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="name"
-                  onChangeText={handleChange('last_name')}
-                  onBlur={handleBlur('last_name')}
-                  error={errors.last_name}
-                  touched={touched.last_name}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.last_name}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                Street Address
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="streetAddressLine1"
-                  onChangeText={handleChange('address')}
-                  onBlur={handleBlur('address')}
-                  error={errors.address}
-                  touched={touched.address}
-                  multiline
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.address}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                City
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="addressCity"
-                  onChangeText={handleChange('city')}
-                  onBlur={handleBlur('city')}
-                  error={errors.city}
-                  touched={touched.city}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.city}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                Post Code
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="postalCode"
-                  onChangeText={handleChange('postcode')}
-                  onBlur={handleBlur('postcode')}
-                  error={errors.postcode}
-                  touched={touched.postcode}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.postcode}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                State/Province/Region
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="addressState"
-                  onChangeText={handleChange('state')}
-                  onBlur={handleBlur('state')}
-                  error={errors.state}
-                  touched={touched.state}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.state}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                Country
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="default"
-                  textContentType="addressState"
-                  onChangeText={handleChange('country')}
-                  onBlur={handleBlur('country')}
-                  error={errors.country}
-                  touched={touched.country}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.country}
-                  </Text>
-                )}
-              </Box>
-              <Text variant="h5" color="primary" marginLeft="xl">
-                Phone Number
-              </Text>
-              <Box style={styles.form}>
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="name-phone-pad"
-                  textContentType="telephoneNumber"
-                  onChangeText={handleChange('phone')}
-                  onBlur={handleBlur('phone')}
-                  error={errors.phone}
-                  touched={touched.phone}
-                />
-                {errors && (
-                  <Text variant="b3" color="red">
-                    {errors.phone}
-                  </Text>
-                )}
-              </Box>
-              <Box style={styles.form}>
-                <Button label="Add Address" onPress={handleSubmit} />
-              </Box>
-            </Box>
-          )}
-        </Formik>
+            )}
+          </Formik>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

@@ -9,7 +9,7 @@ const addBilling = (billingInfo: BillingInfo) =>
 const getBilling = (user_id: number) => client.get(endpoint, { user_id });
 
 const deleteBilling = (billing_id: number) =>
-  client.delete(endpoint, billing_id);
+  client.delete(endpoint, { billing_id });
 
 export default {
   addBilling,

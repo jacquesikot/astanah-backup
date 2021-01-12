@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { Box, Text, theme } from '..';
 import { returnSvg, capitalize } from '../../utils';
 
-export const CIRCLE_WIDTH = 70;
+export const CIRCLE_WIDTH = 65;
 export const CIRCLE_MARGIN = 10;
 
 const styles = StyleSheet.create({
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderColor: theme.colors.light,
     borderWidth: 1,
-    borderRadius: CIRCLE_WIDTH / 2,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 7,

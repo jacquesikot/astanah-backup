@@ -14,7 +14,6 @@ import {
 } from '../components';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
-import { capitalize } from '../utils';
 import { LOWER_CARD_HEIGHT } from '../screens/Home';
 
 const { width, height } = Dimensions.get('window');
@@ -37,31 +36,30 @@ const styles = StyleSheet.create({
   },
 });
 
-interface CategoryDetailProps {}
+interface LoadMoreProps {}
 
-const CategoryDetail = ({
+const LoadMore = ({
   navigation,
   route,
-}: StackScreenProps<HomeNavParamList, 'CategoryDetail'>) => {
-  const { category } = route.params;
-  const { category_name } = category;
+}: StackScreenProps<HomeNavParamList, 'LoadMore'>) => {
+  const { offset: prevOffset } = route.params;
 
-  const getProductsApi = useApi(productsApi.getProductsByCategory);
+  const getProductsApi = useApi(productsApi.getProducts);
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
-    getProductsApi.request(category_name);
+    getProductsApi.request();
   }, []);
 
-  let offset = 5;
+  let offset = prevOffset;
 
   const dataArray = [...getProductsApi.data.slice(0, offset)];
 
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await getProductsApi.request(category_name);
+      await getProductsApi.request();
       dataArray.push(...getProductsApi.data.slice(0, offset));
       setRefreshing(false);
       return;
@@ -83,7 +81,7 @@ const CategoryDetail = ({
   return (
     <SafeAreaView style={styles.container}>
       {getProductsApi.loading ? (
-        <ProductPageSkeleton header={category_name} />
+        <ProductPageSkeleton header="For you" />
       ) : getProductsApi.error ? (
         <ErrorLoading reload={() => navigation.goBack()} />
       ) : getProductsApi.data < 1 ? (
@@ -94,10 +92,7 @@ const CategoryDetail = ({
         />
       ) : (
         <>
-          <StackHeader
-            title={capitalize(category_name)}
-            back={() => navigation.goBack()}
-          />
+          <StackHeader title="For you" back={() => navigation.goBack()} />
           <Box style={styles.productContainer}>
             <FlatList
               refreshing={refreshing}
@@ -129,4 +124,4 @@ const CategoryDetail = ({
   );
 };
 
-export default CategoryDetail;
+export default LoadMore;

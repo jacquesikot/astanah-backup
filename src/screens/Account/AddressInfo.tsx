@@ -14,6 +14,7 @@ import {
   AddressItem,
   ActivityIndicator,
   ErrorMessage,
+  NoContent,
 } from '../../components';
 import { AccountNavParamList } from '../../../types';
 import billingApi from '../../api/billing';
@@ -25,22 +26,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.white,
     flex: 1,
-  },
-  noItem: {
-    marginBottom: 20,
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });
-const { width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 interface AddressInfoProps {}
 
 const AddressInfo = ({
   navigation,
 }: StackScreenProps<AccountNavParamList, 'AddressInfo'>) => {
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const { user } = useAppContext();
   const getBillingApi = useApi(billingApi.getBilling);
@@ -51,9 +48,16 @@ const AddressInfo = ({
   }, []);
 
   const handleDelete = async (billing_id: number) => {
+    setLoading(true);
     await deleteBillingApi.request(billing_id);
-    // if (deleteBillingApi.error) return;
-    return;
+    if (deleteBillingApi.error) {
+      setError(true);
+      setLoading(false);
+      return;
+    }
+    getBillingApi.request(user.id);
+    navigation.navigate('Profile');
+    return setLoading(false);
   };
 
   return (
@@ -63,45 +67,26 @@ const AddressInfo = ({
       ) : getBillingApi.error ? (
         <ErrorLoading reload={getBillingApi.request(user.id)} />
       ) : getBillingApi.data < 1 ? (
-        <Box style={styles.noItem}>
-          <StackHeader title="Address" back={() => navigation.goBack()} />
-          <Box
-            style={{
-              marginTop: '20%',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Image
-              source={require('../../../assets/empty_cart.png')}
-              style={{ width: 287, height: 218.5 }}
-            />
-            <Text variant="h4" color="primary" marginTop="m" marginBottom="xl">
-              No Delivery Address Found..
-            </Text>
-            <Button
-              label="Add Address"
-              onPress={() => navigation.navigate('AddAddress')}
-              width={width * 0.6}
-            />
-          </Box>
-        </Box>
+        <NoContent
+          title="Address"
+          back={() => navigation.goBack()}
+          onPress={() => navigation.navigate('AddAddress')}
+          buttonText="Add Address"
+          message="No Addreses found"
+        />
       ) : (
         <>
-          <Box style={{ alignItems: 'center' }}>
-            <ActivityIndicator
-              visible={deleteBillingApi.loading}
-              opacity={0.8}
-            />
+          <Box style={{ alignItems: 'center', height: height * 0.8 }}>
+            <ActivityIndicator visible={loading} opacity={0.8} />
             <StackHeader title="Address" back={() => navigation.goBack()} />
             <ErrorMessage
               error="An unexpected error occured. Try again.."
-              visible={deleteBillingApi.error}
+              visible={error}
             />
             <Box
               marginTop="s"
               marginBottom="m"
-              style={{ height: '75%', paddingBottom: 10 }}
+              style={{ height: '85%', paddingBottom: 10 }}
             >
               <FlatList
                 showsVerticalScrollIndicator={false}
@@ -109,13 +94,15 @@ const AddressInfo = ({
                 keyExtractor={(item: BillingInfo) => item.user_id.toString()}
                 renderItem={({ item }) => (
                   <AddressItem
-                    trash={handleDelete(item.id)}
+                    trash={() => handleDelete(item.id ? item.id : 0)}
                     edit={() => true}
                     billing={item}
                   />
                 )}
               />
             </Box>
+          </Box>
+          <Box style={{ height: height * 0.2 }}>
             <Button
               label="Add Address"
               onPress={() => navigation.navigate('AddAddress')}

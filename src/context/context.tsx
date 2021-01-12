@@ -6,7 +6,8 @@ import React, {
   useEffect,
 } from 'react';
 
-import { AppContext, User, ACTIONS, ProductOrder } from '../../types';
+import { AppContext, User, ACTIONS, ProductOrder, Product } from '../../types';
+import storage from '../utils/cache';
 
 interface ProviderProps {
   children: ReactNode;
@@ -29,11 +30,14 @@ const Context = createContext<AppContext>({
   manageCart: () => {},
   isProductInCart: () => false,
   cartTotal: 0,
+  address: {},
+  setAddress: () => {},
 });
 
 const Provider = ({ children }: ProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [cart, setCart] = useState<ProductOrder[]>([]);
+  const [address, setAddress] = useState<any[]>([]);
   const [cartTotal, setCartTotal] = useState<number>(0);
   const [user, setUser] = useState<User>({
     id: Math.random(),
@@ -44,7 +48,7 @@ const Provider = ({ children }: ProviderProps) => {
 
   const calculateTotal = () => {
     let total = 0;
-    cart.forEach((item) => (total += item.count! * Number(item.Regular_price)));
+    cart.forEach((item) => (total += item.count! * Number(item.regular_price)));
     setCartTotal(Number(total.toFixed(2)));
   };
 
@@ -64,9 +68,6 @@ const Provider = ({ children }: ProviderProps) => {
     product?: ProductOrder,
     quantity?: number
   ) => {
-    let tempCart: ProductOrder[] = [];
-    let updateProduct: ProductOrder;
-    let updatedProductIndex = 0;
     switch (action) {
       case 'ADD_TO_CART':
         if (isProductInCart(product!)) {
@@ -82,32 +83,8 @@ const Provider = ({ children }: ProviderProps) => {
         setCart([]);
         break;
       case 'INCREASE_COUNT':
-        // tempCart = [...cart];
-        // updatedProductIndex = tempCart.findIndex(
-        //   (item) => item.id === product!.id
-        // );
-        // updateProduct = tempCart[updatedProductIndex];
-        // updateProduct.count!++;
-        // tempCart[updatedProductIndex] = updateProduct;
-        // setCart(tempCart);
-        // break;
-
         product!.count!++;
       case 'DECREASE_COUNT':
-        // tempCart = [...cart];
-        // updatedProductIndex = tempCart.findIndex(
-        //   (item) => item.id === product!.id
-        // );
-        // updateProduct = tempCart[updatedProductIndex];
-        // if (updateProduct.count === 1) {
-        //   setCart(cart.filter((item) => item.id !== product!.id));
-        //   return;
-        // }
-        // updateProduct.count!--;
-        // tempCart[updatedProductIndex] = updateProduct;
-        // setCart(tempCart);
-        // break;
-
         product!.count!--;
       default:
         break;
@@ -126,11 +103,14 @@ const Provider = ({ children }: ProviderProps) => {
     isLoggedIn,
     setUserState,
     user,
+
     addUserDetails,
     isProductInCart,
     manageCart,
     cart,
     cartTotal,
+    address,
+    setAddress,
   };
   return <Context.Provider value={state}>{children}</Context.Provider>;
 };

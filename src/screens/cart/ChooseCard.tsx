@@ -1,26 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { StackScreenProps } from '@react-navigation/stack';
+import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import {
-  StyleSheet,
-  SafeAreaView,
-  Dimensions,
-  Animated,
   FlatList,
-} from 'react-native';
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 
+import { CartNavParamList, CustomerCardDetailsProp } from '../../../types';
 import {
   Box,
+  CustomerCard,
   StackHeader,
+  BillingSkeleton,
+  ErrorLoading,
+  ActivityIndicator,
+  NoContent,
   theme,
   Button,
-  CustomerCard,
+  Text,
+  ErrorMessage,
 } from '../../components';
-import { StackScreenProps } from '@react-navigation/stack';
-import { CartNavParamList, CustomerCardDetailsProp } from '../../../types';
+import { useApi } from '../../hooks';
+import paymentCardApi from '../../api/paymentCard';
+import orderApi from '../../api/order';
 import { useAppContext } from '../../context/context';
-import { customerCardDetails } from '../../data';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const { height } = Dimensions.get('window');
 
@@ -28,56 +31,107 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    height,
-    paddingBottom: 20,
+    alignItems: 'center',
   },
 });
 
-interface ChooseCardProps {}
-
-const ChooseCard = ({
+const PaymentInfo = ({
   navigation,
 }: StackScreenProps<CartNavParamList, 'ChooseCard'>) => {
-  const y = new Animated.Value(0);
-  const onScroll = Animated.event([{ nativeEvent: { contentOffset: { y } } }], {
-    useNativeDriver: true,
-  });
-  const { cartTotal, manageCart } = useAppContext();
+  const {
+    user,
+    manageCart,
+    cart,
+    address,
+    setAddress,
+    cartTotal,
+  } = useAppContext();
+
+  const [card, setCard] = useState<CustomerCardDetailsProp>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  const getPaymentCardApi = useApi(paymentCardApi.getCards);
+  const newOrderApi = useApi(orderApi.newOrder);
+
+  useEffect(() => {
+    getPaymentCardApi.request(user.id);
+  }, []);
+
+  const order: any = {
+    user_id: user.id,
+    payment_method: 'card',
+    set_paid: 1,
+    billing_id: address.id,
+    products: cart,
+    status: 'processing',
+    total: cartTotal.toString(),
+  };
+
+  const handleOrder = async () => {
+    setLoading(true);
+    await newOrderApi.request(order);
+    if (newOrderApi.error) {
+      setError(true);
+      return setLoading(false);
+    }
+    manageCart('EMPTY_CART');
+    setAddress({});
+    navigation.navigate('Success');
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Box style={{ alignItems: 'center', height: height * 0.86 }}>
-        <StackHeader
+      {getPaymentCardApi.loading ? (
+        <BillingSkeleton back={true} title="Choose Card" buttonText="Pay" />
+      ) : getPaymentCardApi.error ? (
+        <ErrorLoading reload={() => getPaymentCardApi.request(user.id)} />
+      ) : getPaymentCardApi.data < 1 ? (
+        <NoContent
           title="Choose Card"
           back={() => navigation.goBack()}
-          plus={() => true}
+          onPress={() => navigation.navigate('AddAddress')}
+          buttonText="Add Card"
+          message="No Payment cards found.."
         />
-        <Box>
-          <AnimatedFlatList
-            scrollEventThrottle={16}
-            bounces={false}
-            {...{ onScroll }}
-            showsVerticalScrollIndicator={false}
-            data={customerCardDetails}
-            keyExtractor={({ id }: CustomerCardDetailsProp) => id.toString()}
-            renderItem={({ index, item }: any) => (
-              <TouchableWithoutFeedback
-                style={{ marginVertical: 10, alignSelf: 'center' }}
-                onPress={() => {
-                  manageCart('EMPTY_CART');
-                  navigation.navigate('Success');
-                }}
-              >
-                <CustomerCard customerCard={item} y={y} index={index} />
-              </TouchableWithoutFeedback>
-            )}
-          />
-          <Box style={{ paddingBottom: 60 }} />
-        </Box>
-
-        <Box style={{ flex: 1 }} />
-      </Box>
+      ) : (
+        <>
+          <ActivityIndicator visible={loading} opacity={0.8} />
+          <Box style={{ alignItems: 'center', height: height * 0.8 }}>
+            <StackHeader
+              title="Choose Card"
+              back={() => navigation.goBack()}
+              plus={() => navigation.navigate('AddCard')}
+            />
+            <ErrorMessage visible={error} error="An unexpected error occured" />
+            <Box marginTop="s" marginBottom="m" style={{ height: '85%' }}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={getPaymentCardApi.data}
+                keyExtractor={(item: CustomerCardDetailsProp) =>
+                  item.id.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableWithoutFeedback onPress={() => setCard(item)}>
+                    <Box style={{ marginVertical: 8 }}>
+                      <CustomerCard
+                        customerCard={item}
+                        borderColor={item === card ? 'primary' : 'light'}
+                      />
+                    </Box>
+                  </TouchableWithoutFeedback>
+                )}
+              />
+            </Box>
+            <Box style={{ height: height * 0.2 }}>
+              <Button noShadow label="Pay" onPress={handleOrder} />
+            </Box>
+          </Box>
+        </>
+      )}
     </SafeAreaView>
   );
 };
 
-export default ChooseCard;
+export default PaymentInfo;

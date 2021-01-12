@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  SafeAreaView,
-  Dimensions,
-  FlatList,
-} from 'react-native';
+import { StyleSheet, SafeAreaView, Dimensions, FlatList } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -20,11 +14,12 @@ import {
 } from '../components';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
+import { LOWER_CARD_HEIGHT } from '../screens/Home';
 
 const { width } = Dimensions.get('window');
 
 const CARD_SPACING = 30;
-const CARD_HEIGHT = 240;
+const CARD_HEIGHT = LOWER_CARD_HEIGHT;
 const CARD_WIDTH = (width - CARD_SPACING - theme.spacing.xl * 2) / 2;
 
 const styles = StyleSheet.create({
@@ -42,7 +37,7 @@ const styles = StyleSheet.create({
   productContainer: {
     marginTop: 20,
     marginLeft: theme.spacing.xl,
-    paddingBottom: 80,
+    paddingBottom: 130,
   },
 });
 
@@ -51,7 +46,7 @@ interface SaleProps {
 }
 
 const Sale = ({ navigation }: StackScreenProps<HomeNavParamList>) => {
-  const getProductsApi = useApi(productsApi.getProducts);
+  const getProductsApi = useApi(productsApi.getSaleProducts);
 
   useEffect(() => {
     getProductsApi.request();
@@ -60,51 +55,32 @@ const Sale = ({ navigation }: StackScreenProps<HomeNavParamList>) => {
   return (
     <SafeAreaView style={styles.container}>
       {getProductsApi.loading ? (
-        <ProductPageSkeleton
-          header="Sales"
-          banner={require('../../assets/banner2.jpeg')}
-        />
+        <ProductPageSkeleton header="Sales" />
       ) : (
         <Box>
-          <StackHeader
-            title="Sales"
-            back={() => navigation.goBack()}
-            filter={() => true}
-          />
-          <ScrollView
-            scrollEventThrottle={16}
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-          >
-            <Box style={{ alignItems: 'center', marginTop: 20 }}>
-              <Banner
-                src={require('../../assets/banner2.jpeg')}
-                height={180}
-                margin={false}
-              />
-            </Box>
-            <Box style={styles.productContainer}>
-              <FlatList
-                numColumns={2}
-                data={getProductsApi.data}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableWithoutFeedback
-                    onPress={() =>
-                      navigation.navigate('ProductDetail', { product: item })
-                    }
-                  >
-                    <ProductCard
-                      product={item}
-                      width={CARD_WIDTH}
-                      height={CARD_HEIGHT}
-                      marginRight={30}
-                    />
-                  </TouchableWithoutFeedback>
-                )}
-              />
-            </Box>
-          </ScrollView>
+          <StackHeader title="Sales" back={() => navigation.goBack()} />
+
+          <Box style={styles.productContainer}>
+            <FlatList
+              numColumns={2}
+              data={getProductsApi.data}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    navigation.navigate('ProductDetail', { product: item })
+                  }
+                >
+                  <ProductCard
+                    product={item}
+                    width={CARD_WIDTH}
+                    height={CARD_HEIGHT}
+                    marginRight={30}
+                  />
+                </TouchableWithoutFeedback>
+              )}
+            />
+          </Box>
         </Box>
       )}
     </SafeAreaView>

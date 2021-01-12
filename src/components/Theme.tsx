@@ -70,6 +70,12 @@ const theme = createTheme({
       fontFamily: 'Poppins-Regular',
       letterSpacing: 0.5,
     },
+    b2B: {
+      fontSize: 14,
+
+      fontFamily: 'Poppins-Bold',
+      letterSpacing: 0.5,
+    },
     b3: {
       fontSize: 12,
 

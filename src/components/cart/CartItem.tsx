@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Image } from 'react-native-expo-image-cache';
 
 import { Box, Text } from '../Theme';
 import { TrashIcon } from '../../Svg';
 import { numberWithCommas } from '../../utils';
 import { ProductOrder } from '../../../types';
-import CartCounter from './CartCounter';
-import { Counter, LikeButton, theme } from '..';
-import { useAppContext } from '../../context/context';
+import { theme } from '..';
 
 const { width } = Dimensions.get('window');
 
@@ -19,10 +18,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.light,
     borderRadius: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 12,
+    paddingLeft: 15,
+    alignItems: 'center',
+  },
+  trash: {
+    position: 'absolute',
+    left: '130%',
+    top: '40%',
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
     justifyContent: 'center',
+    borderColor: theme.colors.light,
   },
 });
 
@@ -33,25 +42,21 @@ interface CartItemProps {
 }
 
 const CartItem = ({ product, margin, deleteItem }: CartItemProps) => {
-  const { cart } = useAppContext();
-
   const {
-    Title,
-    Meta_thumbnail_id,
-    Regular_price,
-    Sale_price,
+    title,
+    meta_thumbnail_id,
+    regular_price,
+    sale_price,
     count,
   } = product;
-  const regPrice = Number(Regular_price).toFixed(2);
-  const salePrice = Number(Sale_price).toFixed(2);
+  const uri = meta_thumbnail_id;
+  const regPrice = Number(regular_price).toFixed(2);
+  const salePrice = Number(sale_price).toFixed(2);
   const marginNo = margin ? margin : 0;
   return (
     <Box style={[styles.container, { marginTop: marginNo }]}>
       <Box style={{ marginRight: 10 }}>
-        <Image
-          source={{ uri: Meta_thumbnail_id }}
-          style={{ width: 72, height: 72 }}
-        />
+        <Image {...{ uri }} tint="light" style={{ width: 72, height: 72 }} />
       </Box>
       <Box style={{ height: 72 }}>
         <Box
@@ -66,19 +71,16 @@ const CartItem = ({ product, margin, deleteItem }: CartItemProps) => {
             style={{ width: 158, marginRight: 10 }}
             numberOfLines={2}
           >
-            {Title}
+            {title}
           </Text>
-
-          <LikeButton />
-          <Box style={{ width: 10 }} />
-          <TouchableOpacity onPress={deleteItem}>
-            <TrashIcon />
+          <TouchableOpacity onPress={deleteItem} style={styles.trash}>
+            <TrashIcon width={18} height={18} color={theme.colors.red} />
           </TouchableOpacity>
         </Box>
         <Box style={{ flex: 1 }} />
         <Box style={{ flexDirection: 'row' }}>
-          <Text variant="h5" color="secondary">
-            {Regular_price
+          <Text variant="h4" color="secondary">
+            {regular_price
               ? 'ZK' + numberWithCommas(Number(regPrice)) + ' ' + `(X${count})`
               : 'ZK' +
                 numberWithCommas(Number(salePrice)) +
