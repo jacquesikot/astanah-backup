@@ -91,24 +91,24 @@ const Welcome = ({
     setLoading(false);
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      Keyboard.dismiss();
-      setLoading(true);
-      const result = await googleAuthApi.login();
-      if (!result.ok) {
-        setLoginFailed(true);
-        setLoading(false);
-        return;
-      }
-      setLoginFailed(false);
-      logIn(result.data as string);
-      setLoading(false);
-    } catch (e) {
-      setLoginFailed(true);
-      setLoading(false);
-    }
-  };
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     Keyboard.dismiss();
+  //     setLoading(true);
+  //     const result = await googleAuthApi.login();
+  //     if (!result.ok) {
+  //       setLoginFailed(true);
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     setLoginFailed(false);
+  //     logIn(result.data as string);
+  //     setLoading(false);
+  //   } catch (e) {
+  //     setLoginFailed(true);
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -208,7 +208,10 @@ const Welcome = ({
         />
       </Box>
       <Box style={{ marginBottom: 10, marginTop: 7 }}>
-        <LoginButton type="Google" onPress={handleGoogleLogin} />
+        <LoginButton
+          type="Google"
+          onPress={() => alert('Login with google coming soon')}
+        />
       </Box>
       <LoginButton
         type="Facebook"

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    width: width - theme.spacing.xl * 2,
+    width: width - theme.spacing.xl * 4,
   },
 });
 

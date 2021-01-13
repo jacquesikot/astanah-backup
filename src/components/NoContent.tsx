@@ -15,10 +15,11 @@ const { width } = Dimensions.get('window');
 
 interface NoContentProps {
   title: string;
-  back: () => void;
-  onPress: () => void;
-  buttonText: string;
+  back?: () => void;
+  onPress?: () => void;
+  buttonText?: string;
   message: string;
+  noHeader?: boolean;
 }
 const NoContent = ({
   title,
@@ -26,10 +27,11 @@ const NoContent = ({
   onPress,
   buttonText,
   message,
+  noHeader,
 }: NoContentProps) => {
   return (
     <Box style={styles.container}>
-      <StackHeader title={title} back={back} />
+      {!noHeader && <StackHeader title={title} back={back} />}
       <Box
         style={{
           marginTop: '20%',
@@ -44,12 +46,14 @@ const NoContent = ({
         <Text variant="b1" color="primary" marginTop="m" marginBottom="xl">
           {message}
         </Text>
-        <Button
-          noShadow
-          label={buttonText}
-          onPress={onPress}
-          width={width * 0.6}
-        />
+        {buttonText && (
+          <Button
+            noShadow
+            label={buttonText}
+            onPress={onPress}
+            width={width * 0.6}
+          />
+        )}
       </Box>
     </Box>
   );

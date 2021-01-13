@@ -9,12 +9,12 @@ import { numberWithCommas, discountPrecentage } from '../../utils';
 import Ratings from '../Ratings';
 import { Product, ProductOrder } from '../../../types';
 
-const { width } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
 const CARD_PADDING = 16;
 const CARD_WIDTH = 165;
 const CARD_HEIGHT = 282;
-export const CARD_MARGIN = (width - 40 - CARD_WIDTH * 2) / 2;
+export const CARD_MARGIN = (screenWidth - 40 - CARD_WIDTH * 2) / 2;
 const IMAGE_SIZE = CARD_WIDTH - CARD_PADDING * 2;
 
 const styles = StyleSheet.create({
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.light,
     alignItems: 'center',
     paddingTop: 16,
+    marginVertical: 20,
   },
   trash: {
     position: 'absolute',
@@ -43,6 +44,14 @@ interface ProductProps {
   trash?: () => void;
 }
 
+const bigScreen = 240;
+const smallScreen = 220;
+
+const returnFromScreenSize = (screenSize: number) => {
+  if (screenSize < 414) return 230;
+  return 240;
+};
+
 const ProductCard = ({
   product,
   width,
@@ -56,8 +65,9 @@ const ProductCard = ({
   const finalPrice = sale_price
     ? Number(sale_price).toFixed(2)
     : Number(regular_price).toFixed(2);
+  const finalHeightValue = returnFromScreenSize(screenWidth);
   const widthNo = width ? width : CARD_WIDTH;
-  const heightNo = height ? height : CARD_HEIGHT;
+  const heightNo = height ? height : finalHeightValue;
   const imageSize = width ? width - CARD_PADDING * 2 : IMAGE_SIZE;
   const ratingValue = 1;
   const marginBottomValue = marginBottom ? marginBottom : CARD_MARGIN;
@@ -145,7 +155,7 @@ const ProductCard = ({
         >
           {sale_price
             ? discountPrecentage(Number(regular_price), Number(sale_price)) +
-              '% Off'
+              `%Off`
             : null}
         </Text>
       </Box>

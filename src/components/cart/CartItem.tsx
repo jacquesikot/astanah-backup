@@ -22,9 +22,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   trash: {
-    position: 'absolute',
-    left: '130%',
-    top: '40%',
     width: 40,
     height: 40,
     borderWidth: 1,

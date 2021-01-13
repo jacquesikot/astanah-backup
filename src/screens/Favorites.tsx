@@ -76,7 +76,7 @@ const Favorites = ({
               source={require('../../assets/empty_cart.png')}
               style={{ width: 287, height: 218.5 }}
             />
-            <Text variant="h4" color="primary" marginTop="m">
+            <Text variant="b1" color="primary" marginTop="m">
               No Products in Favorites
             </Text>
           </Box>

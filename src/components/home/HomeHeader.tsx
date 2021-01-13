@@ -51,13 +51,13 @@ const HomeHeader = ({ favorite, notification }: HomeHeaderProps) => {
       <Box style={styles.icons}>
         <TouchableOpacity onPress={favorite}>
           <Box style={styles.icon}>
-            <HeartIcon width={28} height={26} color={theme.colors.primary} />
+            <HeartIcon width={24} height={24} color={theme.colors.primary} />
           </Box>
         </TouchableOpacity>
         <Box style={{ flex: 1 }} />
         <TouchableOpacity onPress={notification}>
           <Box style={styles.icon}>
-            <AlarmIcon width={28} height={26} color={theme.colors.primary} />
+            <AlarmIcon width={24} height={24} color={theme.colors.primary} />
           </Box>
         </TouchableOpacity>
       </Box>

@@ -240,14 +240,13 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                     <ProductCard
                       product={item}
                       width={LOWER_CARD_WIDTH}
-                      height={LOWER_CARD_HEIGHT}
                       marginRight={30}
                     />
                   </TouchableWithoutFeedback>
                 )}
               />
             </Box>
-            <Box style={{ marginBottom: 20 }}>
+            <Box style={{ marginBottom: 20, marginTop: 20 }}>
               <HomeLink
                 label="Load more"
                 onPress={() => navigation.navigate('LoadMore', { offset })}

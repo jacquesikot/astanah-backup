@@ -111,7 +111,6 @@ const LoadMore = ({
                   <ProductCard
                     product={item}
                     width={CARD_WIDTH}
-                    height={CARD_HEIGHT}
                     marginRight={30}
                   />
                 </TouchableWithoutFeedback>

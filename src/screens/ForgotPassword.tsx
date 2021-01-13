@@ -1,5 +1,5 @@
-import { Formik } from "formik";
-import React from "react";
+import { Formik } from 'formik';
+import React from 'react';
 import {
   StyleSheet,
   Image,
@@ -7,12 +7,12 @@ import {
   Platform,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native";
-import * as Yup from "yup";
-import { StackScreenProps } from "@react-navigation/stack";
+} from 'react-native';
+import * as Yup from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
 
-import { Button, TextInput, Box, Text, theme, BackButton } from "../components";
-import { AuthParamList } from "../../types";
+import { Button, TextInput, Box, Text, theme, BackButton } from '../components';
+import { AuthParamList } from '../../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,30 +20,34 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
   },
   image: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   main: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 20,
   },
   backButton: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingLeft: 20,
   },
 });
 
 const emailSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  email: Yup.string().email('Invalid email').required('Required'),
 });
+
+const handleSubmit = () => {
+  alert('Recover password coming soon');
+};
 
 const ForgotPassword = ({
   navigation,
-}: StackScreenProps<AuthParamList, "ForgotPassword">) => {
+}: StackScreenProps<AuthParamList, 'ForgotPassword'>) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "position" : "height"}
+        behavior={Platform.OS == 'ios' ? 'position' : 'height'}
       >
         <Box style={styles.main}>
           <Box style={styles.backButton}>
@@ -54,7 +58,7 @@ const ForgotPassword = ({
           </Box>
           <Box style={styles.image}>
             <Image
-              source={require("../../assets/forgotPassword.png")}
+              source={require('../../assets/forgotPassword.png')}
               style={{ width: 360, height: 286 }}
             />
           </Box>
@@ -67,8 +71,8 @@ const ForgotPassword = ({
 
           <Formik
             validationSchema={emailSchema}
-            initialValues={{ email: "" }}
-            onSubmit={(values) => console.log(values)}
+            initialValues={{ email: '' }}
+            onSubmit={handleSubmit}
           >
             {({
               handleChange,
@@ -87,8 +91,8 @@ const ForgotPassword = ({
                     textContentType="emailAddress"
                     icon="mail"
                     placeholder="Your Email"
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
                     error={errors.email}
                     touched={touched.email}
                   />

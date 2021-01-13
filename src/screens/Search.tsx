@@ -60,6 +60,7 @@ const Search = ({
   const [data, setData] = useState<Product[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const handleSearch = async (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
@@ -68,8 +69,16 @@ const Search = ({
     setLoading(true);
     const searchText = e.nativeEvent.text;
     const result = await searchProductsApi.request(searchText);
+    if (searchProductsApi.data.length < 1) {
+      setError(true);
+      setData([]);
+      setLoading(false);
+      return;
+    }
+    setError(false);
     setData(result.data);
     setLoading(false);
+    return;
   };
 
   useEffect(() => {
@@ -97,6 +106,12 @@ const Search = ({
               width={LOWER_CARD_WIDTH}
               height={LOWER_CARD_HEIGHT}
               marginRight={30}
+            />
+          ) : error ? (
+            <NoContent
+              noHeader
+              message={'No Products found matching your search'}
+              title="Try Again"
             />
           ) : (
             <FlatList
