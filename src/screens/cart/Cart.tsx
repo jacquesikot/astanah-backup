@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   addToCart: {
-    marginTop: 40,
+    marginTop: 20,
   },
   noItem: {
     marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    top: '50%',
+    top: '30%',
   },
 });
 
@@ -188,7 +188,7 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
               source={require('../../../assets/empty_cart.png')}
               style={{ width: 287, height: 218.5 }}
             />
-            <Text variant="h4" color="primary" marginTop="m">
+            <Text variant="b1" color="primary" marginTop="s">
               No items in Cart
             </Text>
           </Box>

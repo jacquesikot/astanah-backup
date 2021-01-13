@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.light,
     alignItems: 'center',
     paddingTop: 16,
-    marginVertical: 20,
   },
   trash: {
     position: 'absolute',
@@ -49,7 +48,7 @@ const smallScreen = 220;
 
 const returnFromScreenSize = (screenSize: number) => {
   if (screenSize < 414) return 230;
-  return 240;
+  return 250;
 };
 
 const ProductCard = ({
@@ -73,6 +72,7 @@ const ProductCard = ({
   const marginBottomValue = marginBottom ? marginBottom : CARD_MARGIN;
   const marginRightValue = marginRight ? marginRight : CARD_MARGIN;
   const uri = meta_thumbnail_id;
+  const marginVertical = screenWidth < 414 ? 20 : 0;
   return (
     <Box
       style={[
@@ -82,6 +82,7 @@ const ProductCard = ({
           height: heightNo,
           marginRight: marginRightValue,
           marginBottom: marginBottomValue,
+          marginVertical: marginVertical,
         },
       ]}
     >

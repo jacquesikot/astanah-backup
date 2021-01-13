@@ -24,6 +24,7 @@ import {
   Button,
   ProductCard,
   QuantityModal,
+  ProductFlatListSkeleton,
 } from '../components';
 import { HomeNavParamList, Product } from '../../types';
 import { discountPrecentage, numberWithCommas } from '../utils';
@@ -31,6 +32,7 @@ import { useAppContext } from '../context/context';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
 import storage from '../utils/cache';
+import { products } from '../data';
 
 const { width, height } = Dimensions.get('window');
 const CARD_WIDTH = 141;
@@ -252,26 +254,38 @@ const ProductDetail = ({
             <Box style={{ flex: 1 }} />
           </Box>
           <Box style={{ paddingLeft: 20, paddingRight: 20 }}>
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={getProductsApi.data}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.push('ProductDetail', { product: item })
-                  }
-                >
-                  <ProductCard
-                    product={item}
-                    width={CARD_WIDTH}
-                    height={CARD_HEIGHT}
-                    marginRight={20}
-                  />
-                </TouchableWithoutFeedback>
-              )}
-            />
+            {getProductsApi.loading ? (
+              <ProductFlatListSkeleton
+                data={products}
+                horizontal={true}
+                scrollIndicator={false}
+                width={CARD_WIDTH}
+                height={CARD_HEIGHT}
+                numColummns={undefined}
+                marginRight={10}
+              />
+            ) : (
+              <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={getProductsApi.data}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableWithoutFeedback
+                    onPress={() =>
+                      navigation.push('ProductDetail', { product: item })
+                    }
+                  >
+                    <ProductCard
+                      product={item}
+                      width={CARD_WIDTH}
+                      height={CARD_HEIGHT}
+                      marginRight={20}
+                    />
+                  </TouchableWithoutFeedback>
+                )}
+              />
+            )}
           </Box>
           <Box style={styles.button}>
             <Button

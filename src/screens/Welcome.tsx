@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Dimensions, SafeAreaView, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  SafeAreaView,
+  Keyboard,
+  Image,
+} from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -114,7 +120,10 @@ const Welcome = ({
     <SafeAreaView style={styles.container}>
       <ActivityIndicator visible={loading} opacity={0.8} />
       <Box style={styles.logo}>
-        <Text color="white">Logo</Text>
+        <Image
+          source={require('../../assets/astanah_logo.png')}
+          style={{ width: 100, height: 85 }}
+        />
       </Box>
       <Text variant="h4" color="primary">
         Welcome to Astanah
@@ -176,7 +185,7 @@ const Welcome = ({
               </Box>
             </Box>
             <Box style={styles.button}>
-              <Button label="Sign In" onPress={handleSubmit} />
+              <Button noShadow label="Sign In" onPress={handleSubmit} />
             </Box>
           </Box>
         )}

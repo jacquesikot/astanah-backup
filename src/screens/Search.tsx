@@ -12,6 +12,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
+import { Feather as Icon } from '@expo/vector-icons';
 
 import {
   Box,
@@ -29,6 +30,7 @@ import { products } from '../data';
 import { LOWER_CARD_HEIGHT, LOWER_CARD_WIDTH } from '../screens/Home';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ExploreNavParamList, Product } from '../../types';
+import { SearchIcon } from '../Svg';
 
 const { width } = Dimensions.get('window');
 
@@ -49,6 +51,11 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xl,
     marginTop: theme.spacing.l,
   },
+  searchIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: '90%',
+  },
 });
 
 const Search = ({
@@ -61,28 +68,50 @@ const Search = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<boolean>(false);
+  const [typing, setTyping] = useState<boolean>(false);
+
+  let searchText;
 
   const handleSearch = async (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
-    Keyboard.dismiss();
-    setLoading(true);
-    const searchText = e.nativeEvent.text;
-    const result = await searchProductsApi.request(searchText);
-    if (searchProductsApi.data.length < 1) {
-      setError(true);
-      setData([]);
+    try {
+      Keyboard.dismiss();
+      setLoading(true);
+      searchText = e.nativeEvent.text;
+      const result = await searchProductsApi.request(searchText);
+      if (searchProductsApi.data.length < 1) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
+      setError(false);
+      setData(result.data);
       setLoading(false);
       return;
+    } catch (error) {
+      setServerError(true);
     }
-    setError(false);
-    setData(result.data);
-    setLoading(false);
-    return;
+  };
+
+  const keyboardWillShow = () => setTyping(true);
+  const keyboardWillHide = () => {
+    if (data.length > 1) return;
+    return setTyping(false);
   };
 
   useEffect(() => {
     getProductsApi.request();
+    setTyping(false);
+
+    Keyboard.addListener('keyboardWillShow', keyboardWillShow);
+    Keyboard.addListener('keyboardWillHide', keyboardWillHide);
+
+    return () => {
+      Keyboard.removeListener('keyboardWillShow', keyboardWillShow);
+      Keyboard.removeListener('keyboardWillHide', keyboardWillHide);
+    };
   }, []);
 
   return (
@@ -111,29 +140,41 @@ const Search = ({
             <NoContent
               noHeader
               message={'No Products found matching your search'}
-              title="Try Again"
             />
+          ) : searchProductsApi.error || serverError ? (
+            <ErrorLoading message="An unexpected error occured" />
           ) : (
-            <FlatList
-              numColumns={2}
-              showsHorizontalScrollIndicator={false}
-              data={data.length > 1 ? data : getProductsApi.data}
-              keyExtractor={(item: Product) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.navigate('ProductDetails', { product: item })
-                  }
-                >
-                  <ProductCard
-                    product={item}
-                    width={LOWER_CARD_WIDTH}
-                    height={LOWER_CARD_HEIGHT}
-                    marginRight={30}
-                  />
-                </TouchableWithoutFeedback>
-              )}
-            />
+            <>
+              <Box
+                style={styles.searchIcon}
+                visible={data.length > 1 ? false : !typing}
+              >
+                <Icon name="search" size={150} color={theme.colors.primary} />
+                <Text variant="b1" color="grey">
+                  Search for the products you love
+                </Text>
+              </Box>
+              <FlatList
+                numColumns={2}
+                showsHorizontalScrollIndicator={false}
+                data={data.length > 1 ? data : []}
+                keyExtractor={(item: Product) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableWithoutFeedback
+                    onPress={() =>
+                      navigation.navigate('ProductDetails', { product: item })
+                    }
+                  >
+                    <ProductCard
+                      product={item}
+                      width={LOWER_CARD_WIDTH}
+                      height={LOWER_CARD_HEIGHT}
+                      marginRight={30}
+                    />
+                  </TouchableWithoutFeedback>
+                )}
+              />
+            </>
           )}
         </Box>
       </ScrollView>

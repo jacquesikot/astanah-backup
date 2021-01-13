@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 const { width } = Dimensions.get('window');
 
 interface NoContentProps {
-  title: string;
+  title?: string;
   back?: () => void;
   onPress?: () => void;
   buttonText?: string;
@@ -31,7 +31,7 @@ const NoContent = ({
 }: NoContentProps) => {
   return (
     <Box style={styles.container}>
-      {!noHeader && <StackHeader title={title} back={back} />}
+      {!noHeader && <StackHeader title={title || ''} back={back} />}
       <Box
         style={{
           marginTop: '20%',
@@ -50,7 +50,7 @@ const NoContent = ({
           <Button
             noShadow
             label={buttonText}
-            onPress={onPress}
+            onPress={onPress!}
             width={width * 0.6}
           />
         )}

@@ -6,6 +6,7 @@ import {
   Platform,
   Dimensions,
   Keyboard,
+  Image,
 } from 'react-native';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -135,7 +136,10 @@ const Register = ({
         </Box>
         <Box style={styles.main}>
           <Box style={styles.logo}>
-            <Text color="white">Logo</Text>
+            <Image
+              source={require('../../assets/astanah_logo.png')}
+              style={{ width: 100, height: 85 }}
+            />
           </Box>
           <Text variant="h4" color="primary">
             Let's get Started
@@ -253,7 +257,7 @@ const Register = ({
                 </Box>
 
                 <Box style={styles.button}>
-                  <Button label="Sign Up" onPress={handleSubmit} />
+                  <Button noShadow label="Sign Up" onPress={handleSubmit} />
                 </Box>
               </Box>
             )}

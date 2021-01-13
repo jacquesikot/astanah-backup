@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    width: width - theme.spacing.xl * 4,
+    width: width - theme.spacing.xl * 4.3,
   },
 });
 
 interface ErrorLoadingProps {
   message?: string;
   buttonText?: string;
-  reload: any;
+  reload?: any;
 }
 const ErrorLoading = ({ message, reload, buttonText }: ErrorLoadingProps) => {
   return (
@@ -34,7 +34,7 @@ const ErrorLoading = ({ message, reload, buttonText }: ErrorLoadingProps) => {
         style={{ width: 287, height: 218.5 }}
       />
       <Text
-        variant="b2"
+        variant="b1"
         color="primary"
         marginTop="m"
         style={styles.errorMessage}
