@@ -2,8 +2,11 @@ import { create } from 'apisauce';
 import cache from '../utils/cache';
 import authStorage from '../utils/authStorage';
 
+const heroku = 'https://astanahserver.herokuapp.com/api';
+const local = 'http://172.20.10.6:4500/api';
+
 const apiClient = create({
-  baseURL: 'https://astanahserver.herokuapp.com/api',
+  baseURL: local,
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {

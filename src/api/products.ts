@@ -8,7 +8,8 @@ const getProducts = (param: string) =>
 const getProductsByCategory = (param: any) =>
   client.get(endpoint, { category: param });
 
-const getSaleProducts = () => client.get(endpoint + '/sale');
+const getSaleProducts = (take: number) =>
+  client.get(endpoint + '/sale', { take });
 
 export default {
   getProducts,

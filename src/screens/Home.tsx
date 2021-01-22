@@ -83,7 +83,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
   });
 
   useEffect(() => {
-    getCategoriesApi.request();
+    getCategoriesApi.request(20);
     getProductsApi.request();
     getSaleProductsApi.request();
   }, []);

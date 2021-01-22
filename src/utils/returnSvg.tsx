@@ -16,36 +16,38 @@ import {
   ChargerIcon,
 } from '../Svg';
 
+const width = 30;
+
 // retrurn no image icon at the end
 const returnSvg = (index: number) => {
   if (index === 0) {
-    return <ShoeIcon />;
+    return <ShoeIcon width={width} />;
   } else if (index === 1) {
-    return <MakeupIcon />;
+    return <MakeupIcon width={width} />;
   } else if (index === 2) {
-    return <CreamIcon />;
+    return <CreamIcon width={width} />;
   } else if (index === 3) {
-    return <ManiPedi />;
+    return <ManiPedi width={width} />;
   } else if (index === 4) {
-    return <BabyIcon />;
+    return <BabyIcon width={width} />;
   } else if (index === 5) {
-    return <DrinksIcon />;
+    return <DrinksIcon width={width} />;
   } else if (index === 6) {
-    return <ChildIcon />;
+    return <ChildIcon width={width} />;
   } else if (index === 7) {
-    return <WomanIcon />;
+    return <WomanIcon width={width} />;
   } else if (index === 8) {
-    return <LaptopIcon />;
+    return <LaptopIcon width={width} />;
   } else if (index === 9) {
-    return <PerfumeIcon />;
+    return <PerfumeIcon width={width} />;
   } else if (index === 10) {
-    return <ManIcon />;
+    return <ManIcon width={width} />;
   } else if (index === 11) {
-    return <ClothingIcon />;
+    return <ClothingIcon width={width} />;
   } else if (index === 12) {
-    return <PhoneIcon />;
+    return <PhoneIcon width={width} />;
   } else if (index === 13) {
-    return <ChargerIcon />;
+    return <ChargerIcon width={width} />;
   }
 };
 

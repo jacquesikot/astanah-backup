@@ -57,7 +57,3 @@ const ErrorLoading = ({ message, reload, buttonText }: ErrorLoadingProps) => {
 };
 
 export default ErrorLoading;
-
-// TODO
-
-// change error text to: Something went wrong. Check your connection and try again

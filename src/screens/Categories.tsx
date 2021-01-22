@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlatList, TouchableHighlight } from 'react-native-gesture-handler';
 
-import { Box, ListItem, StackHeader, theme, Text } from '../components';
+import { Box, ListItem, StackHeader, theme } from '../components';
 import { Category, HomeNavParamList } from '../../types';
 
 const { width } = Dimensions.get('window');
