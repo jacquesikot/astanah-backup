@@ -146,6 +146,11 @@ export interface BillingInfo {
   phone: string;
 }
 
+export interface FavoriteProps {
+  user_id: number;
+  product_id: number;
+}
+
 // banner
 export interface BannerProps {
   image: string;
