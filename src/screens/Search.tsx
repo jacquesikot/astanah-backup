@@ -6,13 +6,14 @@ import {
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
   Keyboard,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import {
   ScrollView,
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
-import { Feather as Icon } from '@expo/vector-icons';
 
 import {
   Box,
@@ -27,12 +28,11 @@ import {
 import productsApi from '../api/products';
 import { useApi } from '../hooks';
 import { products } from '../data';
-import { LOWER_CARD_HEIGHT, LOWER_CARD_WIDTH } from '../screens/Home';
+import { LOWER_CARD_WIDTH, LOWER_CARD_HEIGHT } from '../screens/Home';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ExploreNavParamList, Product } from '../../types';
-import { SearchIcon } from '../Svg';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const SEARCH_WIDTH = width - theme.spacing.xl * 2;
 
@@ -54,24 +54,28 @@ const styles = StyleSheet.create({
   searchIcon: {
     alignItems: 'center',
     justifyContent: 'center',
-    top: '90%',
+    top: '50%',
   },
 });
 
 const Search = ({
   navigation,
 }: StackScreenProps<ExploreNavParamList, 'Explore'>) => {
-  const searchProductsApi = useApi(productsApi.getProducts);
+  const searchProductsApi = useApi(productsApi.searchProducts);
   const getProductsApi = useApi(productsApi.getProducts);
 
   const [data, setData] = useState<Product[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [extraLoading, setExtraLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [serverError, setServerError] = useState<boolean>(false);
   const [typing, setTyping] = useState<boolean>(false);
 
   let searchText;
+  let dataArray;
+  let searchData: any;
+  let offset = 2;
 
   const handleSearch = async (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
@@ -80,19 +84,33 @@ const Search = ({
       Keyboard.dismiss();
       setLoading(true);
       searchText = e.nativeEvent.text;
-      const result = await searchProductsApi.request(searchText);
-      if (searchProductsApi.data.length < 1) {
+      const result = await productsApi.searchProducts(searchText);
+      searchData = result.data;
+      dataArray = [...searchData.slice(0, offset)];
+      setData(dataArray);
+      if (searchData.length < 1) {
         setError(true);
         setLoading(false);
         return;
       }
       setError(false);
-      setData(result.data);
+      setData(searchData);
       setLoading(false);
       return;
     } catch (error) {
       setServerError(true);
     }
+  };
+
+  const loadMoreData = async () => {
+    if (dataArray.length < searchData) {
+      const newData = getProductsApi.data.slice(offset, offset + offset);
+      // dataArray.push(...newData);
+      setData(newData);
+      offset = offset + offset;
+      return;
+    }
+    return (offset = 5);
   };
 
   const keyboardWillShow = () => setTyping(true);
@@ -125,22 +143,26 @@ const Search = ({
             returnKeyType="search"
           />
         </Box>
-        <Box style={styles.result}>
+        <Box>
           {loading ? (
-            <ProductFlatListSkeleton
-              numColummns={2}
-              horizontal={false}
-              scrollIndicator={false}
-              data={products}
-              width={LOWER_CARD_WIDTH}
-              height={LOWER_CARD_HEIGHT}
-              marginRight={30}
-            />
+            <Box style={styles.result}>
+              <ProductFlatListSkeleton
+                numColummns={2}
+                horizontal={false}
+                scrollIndicator={false}
+                data={products}
+                width={LOWER_CARD_WIDTH}
+                height={LOWER_CARD_HEIGHT}
+                marginRight={30}
+              />
+            </Box>
           ) : error ? (
-            <NoContent
-              noHeader
-              message={'No Products found matching your search'}
-            />
+            <Box>
+              <NoContent
+                noHeader
+                message={'No Products found matching your search'}
+              />
+            </Box>
           ) : searchProductsApi.error || serverError ? (
             <ErrorLoading message="An unexpected error occured" />
           ) : (
@@ -149,31 +171,40 @@ const Search = ({
                 style={styles.searchIcon}
                 visible={data.length > 1 ? false : !typing}
               >
-                <Icon name="search" size={150} color={theme.colors.primary} />
-                <Text variant="b1" color="grey">
+                <Image
+                  source={require('../../assets/search.png')}
+                  style={{ width: width - 60, height: height * 0.3 }}
+                />
+                <Text variant="b1" color="grey" marginTop="xl">
                   Search for the products you love
                 </Text>
               </Box>
-              <FlatList
-                numColumns={2}
-                showsHorizontalScrollIndicator={false}
-                data={data.length > 1 ? data : []}
-                keyExtractor={(item: Product) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableWithoutFeedback
-                    onPress={() =>
-                      navigation.navigate('ProductDetails', { product: item })
-                    }
-                  >
-                    <ProductCard
-                      product={item}
-                      width={LOWER_CARD_WIDTH}
-                      height={LOWER_CARD_HEIGHT}
-                      marginRight={30}
-                    />
-                  </TouchableWithoutFeedback>
-                )}
-              />
+              <Box style={styles.result}>
+                <FlatList
+                  numColumns={2}
+                  showsHorizontalScrollIndicator={false}
+                  onEndReachedThreshold={0.01}
+                  onEndReached={loadMoreData}
+                  ListFooterComponent={<ActivityIndicator />}
+                  data={data.length > 1 ? data : []}
+                  keyExtractor={(item: Product) => item.id.toString()}
+                  renderItem={({ item }) => (
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        navigation.navigate('ProductDetails', { product: item })
+                      }
+                    >
+                      <ProductCard
+                        product={item}
+                        width={LOWER_CARD_WIDTH}
+                        height={LOWER_CARD_HEIGHT}
+                        marginRight={30}
+                        noRating
+                      />
+                    </TouchableWithoutFeedback>
+                  )}
+                />
+              </Box>
             </>
           )}
         </Box>

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  touched: boolean;
+  touched: boolean | undefined;
 }
 
 const Likebutton = ({ touched }: Props) => {

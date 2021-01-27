@@ -5,7 +5,7 @@ import {
   FlatList,
   ScrollView,
   SafeAreaView,
-  Image,
+  Alert,
 } from 'react-native';
 import {
   TouchableWithoutFeedback,
@@ -20,21 +20,21 @@ import {
   StackHeader,
   Text,
   theme,
-  Ratings,
   Button,
   ProductCard,
   QuantityModal,
   ProductFlatListSkeleton,
 } from '../components';
-import { HomeNavParamList, Product } from '../../types';
+import { FavoriteProps, HomeNavParamList, Product } from '../../types';
 import { discountPrecentage, numberWithCommas } from '../utils';
 import { useAppContext } from '../context/context';
 import { useApi } from '../hooks';
 import productsApi from '../api/products';
+import favoritesApi from '../api/favorites';
 import storage from '../utils/cache';
 import { products } from '../data';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const CARD_WIDTH = 141;
 const CARD_HEIGHT = 210;
 
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     left: width - 70,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    bottom: 1,
+    top: 2,
   },
   discount: {
     marginLeft: theme.spacing.xl,
@@ -89,12 +89,15 @@ const ProductDetail = ({
   navigation,
   route,
 }: StackScreenProps<HomeNavParamList, 'ProductDetail'>) => {
-  const { isProductInCart } = useAppContext();
+  const { isProductInCart, user } = useAppContext();
 
   const { product } = route.params;
 
+  const [favoriteButton, setFavoriteButton] = useState<boolean>(false);
+
   const [modal, setModal] = useState<boolean>(false);
-  const [touched, setTouched] = useState<boolean>(false);
+  const [touched, setTouched] = useState<boolean>();
+  const [favoritesData, setFavoritesData] = useState<any[]>([]);
 
   const {
     title,
@@ -110,52 +113,52 @@ const ProductDetail = ({
 
   const getProductsApi = useApi(productsApi.getProductsByCategory);
 
-  const check = async (product: Product) => {
+  const check = async () => {
     try {
-      const data = await storage.permanentGet('user_favorites');
-      if (data.find((favorite: Product) => favorite.id === product.id))
-        return true;
-      return false;
+      setFavoriteButton(false);
+
+      const response = await favoritesApi.getFavorites(user.id);
+      const data: any = response.data;
+      setFavoritesData(data);
+      const res = data.some((f: any) => f.id === product.id);
+
+      res && setTouched(true);
+
+      setFavoriteButton(true);
+
+      if (res) return true;
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const setTouchedButton = async () => {
-    if (await check(product)) return setTouched(true);
-    return setTouched(false);
   };
 
   useEffect(() => {
-    setTouchedButton();
+    check();
     getProductsApi.request(categories);
   }, []);
 
-  const addToFavorites = async (product: Product) => {
+  const addToFavorites = async () => {
     try {
-      if (await check(product)) {
-        return;
-      }
-
-      const favoritesArray = await storage.permanentGet('user_favorites');
-      const newFavorites = [...favoritesArray, product];
-
-      await storage.permanentStore('user_favorites', newFavorites);
-      return;
+      if (touched) return;
+      Alert.alert('Favorites', 'Added to favorites');
+      await favoritesApi.addFavorite({
+        user_id: user.id,
+        product_id: product.id,
+      });
+      setFavoritesData([...favoritesData, product]);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const removeFromFavorites = async (product: Product) => {
+  const removeFromFavorites = async () => {
     try {
-      const favoritesArray = await storage.permanentGet('user_favorites');
-      const updatedFavorites = favoritesArray.filter(
-        (favorite: Product) => favorite.id !== product.id
-      );
-
-      await storage.permanentStore('user_favorites', updatedFavorites);
-      return;
+      Alert.alert('Favorites', 'Removed from favorites');
+      const favoriteToDelete = favoritesData.find(({ id }) => {
+        return id === product.id;
+      });
+      if (favoriteToDelete)
+        await favoritesApi.deleteFavorite(favoriteToDelete.favorite_id);
     } catch (error) {
       console.log(error);
     }
@@ -163,16 +166,12 @@ const ProductDetail = ({
 
   const handleFavorites = async () => {
     try {
-      if (await check(product)) {
-        await removeFromFavorites(product);
+      if (favoritesData.some((f: any) => f.id === product.id)) {
         setTouched(false);
-        alert('Removed from favorites');
-        return;
+        await removeFromFavorites();
       }
-      await addToFavorites(product);
       setTouched(true);
-      alert('Added to favorites');
-      return;
+      await addToFavorites();
     } catch (error) {
       console.log(error);
     }
@@ -202,7 +201,6 @@ const ProductDetail = ({
             </Text>
           </Box>
           <Box style={styles.rowBox}>
-            <Ratings rating={1} size={18} />
             <Box style={{ flex: 1 }} />
           </Box>
           <Box style={styles.rowBox}>
@@ -212,7 +210,7 @@ const ProductDetail = ({
                 : 'ZK' + ' ' + numberWithCommas(Number(price))}
             </Text>
             <Box style={{ flex: 1 }} />
-            <Box style={styles.likeButton}>
+            <Box style={styles.likeButton} visible={favoriteButton}>
               <TouchableOpacity onPress={handleFavorites}>
                 <LikeButton touched={touched} />
               </TouchableOpacity>
@@ -220,9 +218,7 @@ const ProductDetail = ({
           </Box>
           <Box style={styles.discount}>
             <Text variant="b2B" color="grey" textDecorationLine="line-through">
-              {sale_price
-                ? 'ZK' + ' ' + numberWithCommas(Number(regular_price))
-                : ''}
+              {sale_price ? 'ZK' + ' ' + numberWithCommas(Number(price)) : ''}
             </Text>
             <Box style={{ width: 5 }} />
             <Text variant="b2B" color="red">
@@ -293,7 +289,7 @@ const ProductDetail = ({
               label="Add to Cart"
               onPress={() => {
                 if (isProductInCart(product))
-                  return alert('Product already in cart');
+                  return Alert.alert('Cart', 'Product already in cart');
                 setModal(true);
               }}
             />

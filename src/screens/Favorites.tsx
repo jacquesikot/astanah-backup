@@ -16,7 +16,9 @@ import {
 } from '../components';
 import { HomeNavParamList, Product } from '../../types';
 import { LOWER_CARD_HEIGHT, LOWER_CARD_WIDTH } from '../screens/Home';
-import storage from '../utils/cache';
+import favoritesApi from '../api/favorites';
+import { useApi } from '../hooks';
+import { useAppContext } from '../context/context';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,32 +45,19 @@ interface FavoritesProps {
 const Favorites = ({
   navigation,
 }: StackScreenProps<HomeNavParamList, 'Favorites'>) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [favorites, setFavorites] = useState<Product[]>([]);
+  const { user } = useAppContext();
 
-  const getFavorites = async () => {
-    setLoading(true);
-    const favorites = await storage.permanentGet('user_favorites');
-    if (favorites === null) {
-      setError(true);
-      setLoading(false);
-      return;
-    }
-    setFavorites(favorites);
-    setLoading(false);
-    return;
-  };
+  const getFavoritesApi = useApi(favoritesApi.getFavorites);
 
   useEffect(() => {
-    getFavorites();
+    getFavoritesApi.request(Number(user.id));
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? (
+      {getFavoritesApi.loading ? (
         <ProductPageSkeleton header="Favorites" />
-      ) : error ? (
+      ) : getFavoritesApi.isEmpty ? (
         <>
           <StackHeader title="Favorites" back={() => navigation.goBack()} />
           <Box style={styles.noItem}>
@@ -88,7 +77,7 @@ const Favorites = ({
             <Box>
               <FlatList
                 numColumns={2}
-                data={favorites}
+                data={getFavoritesApi.data}
                 keyExtractor={(item: Product) => item.id.toString()}
                 renderItem={({ item }) => (
                   <TouchableWithoutFeedback

@@ -34,8 +34,8 @@ import productsApi from '../api/products';
 const { width } = Dimensions.get('window');
 const NEW_HEADER_HEIGHT = HEADER_HEIGHT + 10;
 export const CARD_WIDTH = 141;
-export const CARD_HEIGHT = 220;
-export const LOWER_CARD_HEIGHT = 250;
+export const CARD_HEIGHT = 205;
+export const LOWER_CARD_HEIGHT = 230;
 const CARD_SPACING = 30;
 export const LOWER_CARD_WIDTH =
   (width - CARD_SPACING - theme.spacing.xl * 2) / 2;
@@ -185,7 +185,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
               />
             </Box>
             <Box style={{ paddingLeft: 20 }}>
-              <FlatList // Limit the content of the flatlist
+              <FlatList
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 data={getSaleProductsApi.data}
@@ -201,6 +201,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                       width={CARD_WIDTH}
                       height={CARD_HEIGHT}
                       marginRight={10}
+                      noRating
                     />
                   </TouchableWithoutFeedback>
                 )}
@@ -226,7 +227,7 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
               </Text>
             </Box>
             <Box style={styles.products}>
-              <FlatList // Limit the content of the flatlist
+              <FlatList
                 numColumns={2}
                 showsHorizontalScrollIndicator={false}
                 data={getProductsApi.data.slice(0, offset)}
@@ -240,13 +241,15 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                     <ProductCard
                       product={item}
                       width={LOWER_CARD_WIDTH}
+                      height={LOWER_CARD_HEIGHT}
                       marginRight={30}
+                      noRating
                     />
                   </TouchableWithoutFeedback>
                 )}
               />
             </Box>
-            <Box style={{ marginBottom: 20, marginTop: 20 }}>
+            <Box style={{ marginBottom: 20, marginTop: 10 }}>
               <HomeLink
                 label="Load more"
                 onPress={() => navigation.navigate('LoadMore', { offset })}

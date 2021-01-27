@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Dimensions, FlatList } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -49,7 +55,7 @@ const LoadMore = ({
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
-    getProductsApi.request();
+    getProductsApi.request(1000);
   }, []);
 
   let offset = prevOffset;
@@ -87,7 +93,7 @@ const LoadMore = ({
       ) : getProductsApi.data < 1 ? (
         <ErrorLoading
           buttonText="Go back"
-          message="Oops.. no products in this category"
+          message="Oops... Something unexpected occured"
           reload={() => navigation.goBack()}
         />
       ) : (
@@ -99,6 +105,7 @@ const LoadMore = ({
               onRefresh={onRefresh}
               onEndReachedThreshold={0.01}
               onEndReached={loadMoreData}
+              ListFooterComponent={<ActivityIndicator />}
               numColumns={2}
               data={dataArray}
               keyExtractor={(item: Product) => item.id.toString()}
