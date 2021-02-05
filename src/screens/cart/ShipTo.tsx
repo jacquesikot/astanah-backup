@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Image, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  Dimensions,
+  Alert,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
   TouchableWithoutFeedback,
@@ -57,7 +63,7 @@ const ShipTo = ({
   return (
     <SafeAreaView style={styles.container}>
       {getBillingApi.loading ? (
-        <BillingSkeleton back={true} title="Ship To" buttonText={BUTTON_TEXT} />
+        <BillingSkeleton back={true} title="Ship To" />
       ) : getBillingApi.error ? (
         <ErrorLoading reload={getBillingApi.request(user.id)} />
       ) : getBillingApi.data < 1 ? (
@@ -111,7 +117,6 @@ const ShipTo = ({
                     <AddressItem
                       borderColor={item === address ? 'primary' : 'light'}
                       billing={item}
-                      // edit={() => navigation.navigate('EditAddress')}
                     />
                   </TouchableWithoutFeedback>
                 )}
@@ -121,7 +126,12 @@ const ShipTo = ({
           <Box style={{ height: height * 0.2 }}>
             <Button
               label={BUTTON_TEXT}
-              onPress={() => navigation.navigate('Payment')}
+              onPress={() => {
+                if (!address)
+                  return Alert.alert('Address', 'Please Select an address');
+                return navigation.navigate('Payment');
+              }}
+              noShadow
             />
           </Box>
         </>

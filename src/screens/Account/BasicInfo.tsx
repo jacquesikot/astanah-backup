@@ -61,6 +61,7 @@ const BasicInfo = ({
   // This code should not be here
   const handleUpdate = async (values: any, { resetForm }: any) => {
     setLoading(true);
+
     const data = {
       id: user.id,
       first_name: values.firstName,
@@ -68,7 +69,11 @@ const BasicInfo = ({
     };
     const { id, first_name, last_name } = data;
     const result = await usersApi.update(id, first_name, last_name);
-    if (!result.ok) return setServerError('An unexpected error occured.');
+    if (!result.ok) {
+      setLoading(false);
+      setServerError('An unexpected error occured.');
+      return;
+    }
     const response = result.data as any;
     resetForm();
     setFirstName(response.first_name);
@@ -79,12 +84,14 @@ const BasicInfo = ({
       email: user.email,
       id: user.id,
     });
+    navigation.navigate('Profile');
     setLoading(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ActivityIndicator visible={loading} opacity={0.8} />
+
       <StackHeader title="Basic Information" back={() => navigation.goBack()} />
       <Formik
         validationSchema={BasicInfoSchema}
@@ -149,7 +156,7 @@ const BasicInfo = ({
               )}
             </Box>
             <Box style={[styles.form, { marginTop: height * 0.35 }]}>
-              <Button label="Update user" onPress={handleSubmit} />
+              <Button label="Update user" onPress={handleSubmit} noShadow />
             </Box>
           </Box>
         )}

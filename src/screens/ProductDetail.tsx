@@ -36,7 +36,7 @@ import { products } from '../data';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 141;
-const CARD_HEIGHT = 210;
+const CARD_HEIGHT = 200;
 
 const styles = StyleSheet.create({
   container: {
@@ -134,7 +134,7 @@ const ProductDetail = ({
 
   useEffect(() => {
     check();
-    getProductsApi.request(categories);
+    getProductsApi.request(gallery);
   }, []);
 
   const addToFavorites = async () => {
@@ -177,7 +177,7 @@ const ProductDetail = ({
     }
   };
 
-  const images = gallery.split(', ');
+  const images = categories && categories.split(', ');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -277,6 +277,7 @@ const ProductDetail = ({
                       width={CARD_WIDTH}
                       height={CARD_HEIGHT}
                       marginRight={20}
+                      noRating
                     />
                   </TouchableWithoutFeedback>
                 )}

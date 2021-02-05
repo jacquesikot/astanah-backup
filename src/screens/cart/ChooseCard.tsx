@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, Dimensions, Alert } from 'react-native';
 import {
   FlatList,
   TouchableWithoutFeedback,
@@ -69,23 +69,29 @@ const PaymentInfo = ({
   };
 
   const handleOrder = async () => {
-    setLoading(true);
-    await newOrderApi.request(order);
-    if (newOrderApi.error) {
+    try {
+      if (!card) return Alert.alert('Card', 'Please select a payment card');
+      setLoading(true);
+      await newOrderApi.request(order);
+      if (newOrderApi.error) {
+        setError(true);
+        return setLoading(false);
+      }
+      manageCart('EMPTY_CART');
+      setAddress({});
+      navigation.navigate('Success');
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
       setError(true);
-      return setLoading(false);
     }
-    manageCart('EMPTY_CART');
-    setAddress({});
-    navigation.navigate('Success');
-    setLoading(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {getPaymentCardApi.loading ? (
-        <BillingSkeleton back={true} title="Choose Card" buttonText="Pay" />
-      ) : getPaymentCardApi.error ? (
+        <BillingSkeleton back={true} title="Choose Card" />
+      ) : getPaymentCardApi.error || error ? (
         <ErrorLoading reload={() => getPaymentCardApi.request(user.id)} />
       ) : getPaymentCardApi.data < 1 ? (
         <NoContent
@@ -125,7 +131,11 @@ const PaymentInfo = ({
               />
             </Box>
             <Box style={{ height: height * 0.2 }}>
-              <Button noShadow label="Pay" onPress={handleOrder} />
+              <Button
+                noShadow
+                label={`Pay ZK${cartTotal}`}
+                onPress={handleOrder}
+              />
             </Box>
           </Box>
         </>

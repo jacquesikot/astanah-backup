@@ -20,6 +20,7 @@ export { default as PaymentInfo } from './Account/PaymentInfo';
 export { default as Password } from './Account/Password';
 export { default as AddAddress } from './Account/AddAddress';
 export { default as AddCard } from './Account/AddCard';
+export { default as EditAddress } from './Account/EditAddress';
 
 export { default as Sale } from './Sale';
 export { default as Favorites } from './Favorites';

@@ -57,11 +57,7 @@ const PaymentInfo = ({
   return (
     <SafeAreaView style={styles.container}>
       {getPaymentCardApi.loading ? (
-        <BillingSkeleton
-          back={true}
-          title="Credit & Debit Card"
-          buttonText="Add Card"
-        />
+        <BillingSkeleton back={true} title="Credit & Debit Card" />
       ) : getPaymentCardApi.error ? (
         <ErrorLoading reload={() => getPaymentCardApi.request(user.id)} />
       ) : getPaymentCardApi.data < 1 ? (
@@ -74,8 +70,8 @@ const PaymentInfo = ({
         />
       ) : (
         <>
-          <ActivityIndicator visible={loading} opacity={0.8} />
           <Box style={{ alignItems: 'center', height: height * 0.8 }}>
+            <ActivityIndicator visible={loading} opacity={0.8} />
             <StackHeader
               title="Credit & Debit Card"
               back={() => navigation.goBack()}

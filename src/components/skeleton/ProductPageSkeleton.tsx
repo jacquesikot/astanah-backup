@@ -8,7 +8,7 @@ import { capitalize } from '../../utils';
 const { width } = Dimensions.get('window');
 
 const CARD_SPACING = 30;
-const CARD_HEIGHT = 240;
+const CARD_HEIGHT = 220;
 const CARD_WIDTH = (width - CARD_SPACING - theme.spacing.xl * 2) / 2;
 
 const styles = StyleSheet.create({

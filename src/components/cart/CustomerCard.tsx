@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   trash: {
-    position: 'absolute',
     width: 40,
     height: 40,
     borderWidth: 1,
@@ -93,7 +92,6 @@ const CustomerCard = ({
               <TrashIcon width={18} height={18} color={theme.colors.red} />
             </TouchableOpacity>
           )}
-          <Box style={{ flex: 1 }} />
         </Box>
       </Box>
     </Animated.View>

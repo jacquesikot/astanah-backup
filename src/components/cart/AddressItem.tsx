@@ -73,7 +73,7 @@ const AddressItem = ({
       </Text>
       <Box style={styles.subView}>
         {edit && (
-          <Button label="Edit" onPress={() => edit} width={77} height={45} />
+          <Button label="Edit" onPress={edit} width={77} height={45} noShadow />
         )}
         <Box style={{ marginLeft: 25 }} />
         {trash && (
@@ -83,6 +83,7 @@ const AddressItem = ({
             onPress={trash}
             width={77}
             height={45}
+            noShadow
           />
         )}
       </Box>

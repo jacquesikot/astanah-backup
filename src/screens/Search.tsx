@@ -7,7 +7,6 @@ import {
   TextInputSubmitEditingEventData,
   Keyboard,
   Image,
-  ActivityIndicator,
 } from 'react-native';
 import {
   ScrollView,
@@ -67,15 +66,15 @@ const Search = ({
   const [data, setData] = useState<Product[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [extraLoading, setExtraLoading] = useState<boolean>(false);
+  const [hideFlatlist, setHideFlatlist] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [serverError, setServerError] = useState<boolean>(false);
   const [typing, setTyping] = useState<boolean>(false);
+  const [introLogo, setIntroLogo] = useState<boolean>(true);
 
-  let searchText;
-  let dataArray;
   let searchData: any;
-  let offset = 2;
+  let dataArray;
+  let offset = 2000;
 
   const handleSearch = async (
     e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
@@ -83,39 +82,37 @@ const Search = ({
     try {
       Keyboard.dismiss();
       setLoading(true);
-      searchText = e.nativeEvent.text;
+      setError(false);
+      const searchText = e.nativeEvent.text;
       const result = await productsApi.searchProducts(searchText);
       searchData = result.data;
       dataArray = [...searchData.slice(0, offset)];
       setData(dataArray);
       if (searchData.length < 1) {
+        setHideFlatlist(false);
+        setIntroLogo(false);
         setError(true);
         setLoading(false);
         return;
       }
       setError(false);
-      setData(searchData);
+      setData(dataArray);
+      setHideFlatlist(true);
       setLoading(false);
+      setIntroLogo(false);
       return;
     } catch (error) {
       setServerError(true);
     }
   };
 
-  const loadMoreData = async () => {
-    if (dataArray.length < searchData) {
-      const newData = getProductsApi.data.slice(offset, offset + offset);
-      // dataArray.push(...newData);
-      setData(newData);
-      offset = offset + offset;
-      return;
-    }
-    return (offset = 5);
+  const keyboardWillShow = () => {
+    setTyping(true);
+    setIntroLogo(false);
   };
-
-  const keyboardWillShow = () => setTyping(true);
   const keyboardWillHide = () => {
     if (data.length > 1) return;
+    setIntroLogo(true);
     return setTyping(false);
   };
 
@@ -160,17 +157,16 @@ const Search = ({
             <Box>
               <NoContent
                 noHeader
-                message={'No Products found matching your search'}
+                message={
+                  'No Products found matching your search, try a less specific search phrase'
+                }
               />
             </Box>
           ) : searchProductsApi.error || serverError ? (
             <ErrorLoading message="An unexpected error occured" />
           ) : (
             <>
-              <Box
-                style={styles.searchIcon}
-                visible={data.length > 1 ? false : !typing}
-              >
+              <Box style={styles.searchIcon} visible={introLogo}>
                 <Image
                   source={require('../../assets/search.png')}
                   style={{ width: width - 60, height: height * 0.3 }}
@@ -179,13 +175,10 @@ const Search = ({
                   Search for the products you love
                 </Text>
               </Box>
-              <Box style={styles.result}>
+              <Box style={styles.result} visible={hideFlatlist}>
                 <FlatList
                   numColumns={2}
                   showsHorizontalScrollIndicator={false}
-                  onEndReachedThreshold={0.01}
-                  onEndReached={loadMoreData}
-                  ListFooterComponent={<ActivityIndicator />}
                   data={data.length > 1 ? data : []}
                   keyExtractor={(item: Product) => item.id.toString()}
                   renderItem={({ item }) => (

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Dimensions, FlatList } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -54,7 +60,7 @@ const CategoryDetail = ({
     getProductsApi.request(category_name);
   }, []);
 
-  let offset = 5;
+  let offset = 6;
 
   const dataArray = [...getProductsApi.data.slice(0, offset)];
 
@@ -104,6 +110,7 @@ const CategoryDetail = ({
               onRefresh={onRefresh}
               onEndReachedThreshold={0.01}
               onEndReached={loadMoreData}
+              ListFooterComponent={<ActivityIndicator />}
               numColumns={2}
               data={dataArray}
               keyExtractor={(item: Product) => item.id.toString()}
@@ -118,6 +125,7 @@ const CategoryDetail = ({
                     width={CARD_WIDTH}
                     height={CARD_HEIGHT}
                     marginRight={30}
+                    noRating
                   />
                 </TouchableWithoutFeedback>
               )}

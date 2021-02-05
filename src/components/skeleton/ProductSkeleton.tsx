@@ -87,12 +87,6 @@ const ProductSkeleton = ({
           { backgroundColor: bgColor, width: IMAGE_SIZE * 0.8 },
         ]}
       />
-      <Animated.View
-        style={[
-          styles.tinyText,
-          { backgroundColor: bgColor, width: IMAGE_SIZE * 0.6 },
-        ]}
-      />
     </Box>
   );
 };

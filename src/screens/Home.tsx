@@ -34,7 +34,7 @@ import productsApi from '../api/products';
 const { width } = Dimensions.get('window');
 const NEW_HEADER_HEIGHT = HEADER_HEIGHT + 10;
 export const CARD_WIDTH = 141;
-export const CARD_HEIGHT = 205;
+export const CARD_HEIGHT = 210;
 export const LOWER_CARD_HEIGHT = 230;
 const CARD_SPACING = 30;
 export const LOWER_CARD_WIDTH =
@@ -174,39 +174,45 @@ const Home = ({ navigation }: StackScreenProps<HomeNavParamList, 'Home'>) => {
                 )}
               />
             </Box>
-            <Box style={styles.linkText}>
-              <Text variant="h5" color="primary">
-                Sales
-              </Text>
-              <Box style={{ flex: 1 }} />
-              <HomeLink
-                label="See more"
-                onPress={() => navigation.navigate('Sale')}
-              />
-            </Box>
-            <Box style={{ paddingLeft: 20 }}>
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={getSaleProductsApi.data}
-                keyExtractor={(item: Product) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableWithoutFeedback
-                    onPress={() =>
-                      navigation.navigate('ProductDetail', { product: item })
-                    }
-                  >
-                    <ProductCard
-                      product={item}
-                      width={CARD_WIDTH}
-                      height={CARD_HEIGHT}
-                      marginRight={10}
-                      noRating
-                    />
-                  </TouchableWithoutFeedback>
-                )}
-              />
-            </Box>
+            {getSaleProductsApi.data.length < 1 ? null : (
+              <>
+                <Box style={styles.linkText}>
+                  <Text variant="h5" color="primary">
+                    Sales
+                  </Text>
+                  <Box style={{ flex: 1 }} />
+                  <HomeLink
+                    label="See more"
+                    onPress={() => navigation.navigate('Sale')}
+                  />
+                </Box>
+                <Box style={{ paddingLeft: 20 }}>
+                  <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    data={getSaleProductsApi.data}
+                    keyExtractor={(item: Product) => item.id.toString()}
+                    renderItem={({ item }) => (
+                      <TouchableWithoutFeedback
+                        onPress={() =>
+                          navigation.navigate('ProductDetail', {
+                            product: item,
+                          })
+                        }
+                      >
+                        <ProductCard
+                          product={item}
+                          width={CARD_WIDTH}
+                          height={CARD_HEIGHT}
+                          marginRight={10}
+                          noRating
+                        />
+                      </TouchableWithoutFeedback>
+                    )}
+                  />
+                </Box>
+              </>
+            )}
             <Box
               style={{ alignItems: 'center', marginRight: -20, marginTop: 10 }}
             >

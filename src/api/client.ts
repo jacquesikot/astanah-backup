@@ -4,9 +4,10 @@ import authStorage from '../utils/authStorage';
 
 const heroku = 'https://astanahserver.herokuapp.com/api';
 const local = 'http://172.20.10.6:4500/api';
+const local2 = 'http://192.168.43.60:4500/api'
 
 const apiClient = create({
-  baseURL: local,
+  baseURL: local2,
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {

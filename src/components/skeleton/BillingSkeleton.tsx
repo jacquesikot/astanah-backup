@@ -29,14 +29,12 @@ const styles = StyleSheet.create({
 interface BillingSkeletonProps {
   back: any;
   title?: string;
-  buttonText?: string;
 }
 
 const { height } = Dimensions.get('window');
 
-const BillingSkeleton = ({ back, title, buttonText }: BillingSkeletonProps) => {
+const BillingSkeleton = ({ back, title }: BillingSkeletonProps) => {
   const titleValue = title ? title : 'Address';
-  const buttonTextValue = buttonText ? buttonText : 'Add Address';
   return (
     <SafeAreaView style={styles.container}>
       <Box style={{ alignItems: 'center', height: height * 0.8 }}>
@@ -52,9 +50,9 @@ const BillingSkeleton = ({ back, title, buttonText }: BillingSkeletonProps) => {
       </Box>
       <Box style={{ height: height * 0.2 }}>
         <Button
-          label={buttonTextValue}
+          label={''}
           onPress={() => true}
-          color={theme.colors.grey}
+          color={theme.colors.offWhite2}
         />
       </Box>
     </SafeAreaView>

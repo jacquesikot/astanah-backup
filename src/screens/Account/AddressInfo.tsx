@@ -95,7 +95,9 @@ const AddressInfo = ({
                 renderItem={({ item }) => (
                   <AddressItem
                     trash={() => handleDelete(item.id ? item.id : 0)}
-                    edit={() => true}
+                    edit={() =>
+                      navigation.navigate('EditAddress', { address: item })
+                    }
                     billing={item}
                   />
                 )}
@@ -106,6 +108,7 @@ const AddressInfo = ({
             <Button
               label="Add Address"
               onPress={() => navigation.navigate('AddAddress')}
+              noShadow
             />
           </Box>
         </>

@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import theme, { Box, Text } from '../Theme';
 import { numberWithCommas, discountPrecentage } from '../../utils';
 import Ratings from '../Ratings';
-import { Product, ProductOrder } from '../../../types';
+import { ProductOrder } from '../../../types';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -43,9 +43,6 @@ interface ProductProps {
   trash?: () => void;
 }
 
-const bigScreen = 240;
-const smallScreen = 220;
-
 const returnFromScreenSize = (screenSize: number) => {
   if (screenSize < 414) return 230;
   return 250;
@@ -73,6 +70,9 @@ const ProductCard = ({
   const marginRightValue = marginRight ? marginRight : CARD_MARGIN;
   const uri = meta_thumbnail_id;
   const marginVertical = screenWidth < 414 ? 20 : 0;
+  const preview = {
+    uri: `https://via.placeholder.com/${imageSize}/ebf0ff`,
+  };
   return (
     <Box
       style={[
@@ -87,8 +87,9 @@ const ProductCard = ({
       ]}
     >
       <Image
-        {...{ uri }}
+        {...{ uri, preview }}
         tint="light"
+        transitionDuration={300}
         style={{ width: imageSize, height: imageSize, borderRadius: 5 }}
       />
       {trash && (

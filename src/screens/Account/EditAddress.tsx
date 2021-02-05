@@ -25,6 +25,7 @@ import { AccountNavParamList, BillingInfo } from '../../../types';
 import useApi from '../../hooks/useApi';
 import billingApi from '../../api/billing';
 import { useAppContext } from '../../context/context';
+import { capitalize } from '../../utils';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,24 +62,29 @@ const AddressSchema = Yup.object().shape({
   phone: Yup.string().min(2).max(50).required('Phone is a required field'),
 });
 
-const AddAddress = ({
+const EditAddress = ({
   navigation,
-}: StackScreenProps<AccountNavParamList, 'AddAddress'>) => {
+  route,
+}: StackScreenProps<AccountNavParamList, 'EditAddress'>) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const inputRef = useRef(null);
-
   const { user } = useAppContext();
 
-  const getBillingApi = useApi(billingApi.addBilling);
+  const { address } = route.params;
+
+  const updateBillingApi = useApi(billingApi.updateBilling);
 
   const handleSubmit = async (billingInfo: BillingInfo) => {
     try {
       Keyboard.dismiss();
       setLoading(true);
-      await getBillingApi.request(billingInfo);
-      if (getBillingApi.error) {
+      const updateData = {
+        id: address.id,
+        ...billingInfo,
+      };
+      await updateBillingApi.request(updateData);
+      if (updateBillingApi.error) {
         setError(true);
         return setLoading(false);
       }
@@ -94,7 +100,7 @@ const AddAddress = ({
   return (
     <SafeAreaView style={styles.container}>
       <ActivityIndicator visible={loading} opacity={0.8} />
-      <StackHeader title="Add Address" back={() => navigation.goBack()} />
+      <StackHeader title="Edit Address" back={() => navigation.goBack()} />
       <ScrollView decelerationRate={16} bounces={false}>
         <KeyboardAvoidingView behavior="padding">
           <Formik
@@ -122,7 +128,9 @@ const AddAddress = ({
                 </Box>
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="First Name"
+                    placeholder={`First Name - ${capitalize(
+                      address.first_name
+                    )}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -141,7 +149,7 @@ const AddAddress = ({
                 </Box>
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="Last Name"
+                    placeholder={`Last Name - ${capitalize(address.last_name)}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -160,7 +168,9 @@ const AddAddress = ({
 
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="Street Address"
+                    placeholder={`Street Address - ${capitalize(
+                      address.address
+                    )}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -179,7 +189,7 @@ const AddAddress = ({
                 </Box>
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="City"
+                    placeholder={`City - ${capitalize(address.city)}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -197,7 +207,7 @@ const AddAddress = ({
                 </Box>
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="State/province/region"
+                    placeholder={`State - ${capitalize(address.state)}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -216,7 +226,7 @@ const AddAddress = ({
 
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="Postcode"
+                    placeholder={`Postcode - ${capitalize(address.postcode)}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="default"
@@ -234,7 +244,7 @@ const AddAddress = ({
                 </Box>
                 <Box style={styles.form}>
                   <TextInput
-                    placeholder="Phone Number"
+                    placeholder={`Phone Number - ${capitalize(address.phone)}`}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="phone-pad"
@@ -252,7 +262,11 @@ const AddAddress = ({
                 </Box>
 
                 <Box style={styles.form}>
-                  <Button noShadow label="Add Address" onPress={handleSubmit} />
+                  <Button
+                    noShadow
+                    label="Update Address"
+                    onPress={handleSubmit}
+                  />
                 </Box>
               </Box>
             )}
@@ -263,4 +277,4 @@ const AddAddress = ({
   );
 };
 
-export default AddAddress;
+export default EditAddress;

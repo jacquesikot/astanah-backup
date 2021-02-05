@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, Dimensions } from 'react-native';
 
-import { Text, Box, StackHeader, Button } from '../components';
+import { Text, Box, StackHeader, Button, theme } from '../components';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,13 +37,20 @@ const NoContent = ({
           marginTop: '20%',
           alignItems: 'center',
           justifyContent: 'center',
+          width: width - theme.spacing.xl * 3,
         }}
       >
         <Image
           source={require('../../assets/empty_cart.png')}
           style={{ width: 287, height: 218.5 }}
         />
-        <Text variant="b1" color="primary" marginTop="m" marginBottom="xl">
+        <Text
+          variant="b1"
+          color="primary"
+          marginTop="m"
+          marginBottom="xl"
+          style={{ textAlign: 'center' }}
+        >
           {message}
         </Text>
         {buttonText && (
