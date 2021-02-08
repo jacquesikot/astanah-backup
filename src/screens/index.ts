@@ -12,6 +12,7 @@ export { default as ChooseCard } from './cart/ChooseCard';
 export { default as Payment } from './cart/Payment';
 export { default as ShipTo } from './cart/ShipTo';
 export { default as Success } from './cart/Success';
+export { default as MobilePayment } from './cart/MobilePayment';
 
 export { default as Profile } from './Account/Profile';
 export { default as BasicInfo } from './Account/BasicInfo';

@@ -50,6 +50,7 @@ export type CartNavParamList = {
   ShipTo: undefined;
   Payment: undefined;
   ChooseCard: undefined;
+  MobilePayment: undefined;
   AddAddress: undefined;
   EditAddress: undefined;
   Success: undefined;

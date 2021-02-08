@@ -24,6 +24,7 @@ import { useApi } from '../../hooks';
 import paymentCardApi from '../../api/paymentCard';
 import orderApi from '../../api/order';
 import { useAppContext } from '../../context/context';
+import paymentApi, { IChargeData } from '../../api/paymentClient';
 
 const { height } = Dimensions.get('window');
 
@@ -66,6 +67,30 @@ const PaymentInfo = ({
     products: cart,
     status: 'processing',
     total: cartTotal.toString(),
+  };
+
+  const public_key = 'FLWPUBK_TEST-ba55d43d5f3c5a83c97daa995fe2d1f4-X';
+
+  const handleCard = async () => {
+    setLoading(true);
+    const data: IChargeData = {
+      public_key,
+      tx_ref: Math.random().toString(),
+      card_number: '5531886652142950',
+      cvv: '564',
+      expiry_month: '09',
+      expiry_year: '32',
+      amount: '5000',
+      currency: 'NGN',
+      type: 'card',
+      phone_number: '09059032943',
+      fullName: 'Jacques Ikot',
+      email: 'jacquesikot@gmail.com',
+      pin: '3310',
+    };
+    const response = await paymentApi.cardCharge(data);
+    console.log(response.data);
+    setLoading(false);
   };
 
   const handleOrder = async () => {
@@ -134,7 +159,7 @@ const PaymentInfo = ({
               <Button
                 noShadow
                 label={`Pay ZK${cartTotal}`}
-                onPress={handleOrder}
+                onPress={handleCard}
               />
             </Box>
           </Box>

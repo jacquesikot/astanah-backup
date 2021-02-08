@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
 
 import { AppNavParamList } from '../../types';
 import HomeNav from './HomeNav';
@@ -21,6 +23,22 @@ const AppStack = createBottomTabNavigator<AppNavParamList>();
 
 const AppNav = () => {
   const { cart } = useAppContext();
+
+  useEffect(() => {
+    registerForPushNotifications();
+  }, []);
+
+  const registerForPushNotifications = async () => {
+    try {
+      const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      if (!permission.granted) return;
+
+      const token = await Notifications.getExpoPushTokenAsync();
+     
+    } catch (error) {
+      console.log('Error getting a push token', error);
+    }
+  };
   return (
     <AppStack.Navigator
       tabBarOptions={{

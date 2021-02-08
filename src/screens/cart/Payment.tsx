@@ -14,8 +14,12 @@ const paymentOptions: PaymentOptions[] = [
     icon: <CardTransferIcon />,
     method: 'card',
   },
-  { id: 2, title: 'PayPal', icon: <PayPalIcon />, method: 'paypal' },
-  { id: 3, title: 'Bank Transfer', icon: <BankTransferIcon />, method: 'cash' },
+  {
+    id: 2,
+    title: 'Mobile Money',
+    icon: <BankTransferIcon />,
+    method: 'mobile-money',
+  },
 ];
 
 const { height } = Dimensions.get('window');
@@ -27,8 +31,6 @@ const styles = StyleSheet.create({
   },
 });
 
-interface PaymentProps {}
-
 const Payment = ({
   navigation,
 }: StackScreenProps<CartNavParamList, 'Payment'>) => {
@@ -37,20 +39,24 @@ const Payment = ({
       <Box style={{ height }}>
         <StackHeader title="Payment" back={() => navigation.goBack()} />
 
-        <FlatList
-          showsVerticalScrollIndicator={true}
-          bounces={false}
-          data={paymentOptions}
-          keyExtractor={(item: PaymentOptions) => item.id.toString()}
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              underlayColor={theme.colors.light}
-              onPress={() => navigation.navigate('ChooseCard')}
-            >
-              <ListItem key={index} label={item.title} icon={item.icon} />
-            </TouchableHighlight>
-          )}
-        />
+        <TouchableHighlight
+          underlayColor={theme.colors.light}
+          onPress={() => navigation.navigate('ChooseCard')}
+        >
+          <ListItem
+            label={paymentOptions[0].title}
+            icon={paymentOptions[0].icon}
+          />
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor={theme.colors.light}
+          onPress={() => navigation.navigate('MobilePayment')}
+        >
+          <ListItem
+            label={paymentOptions[1].title}
+            icon={paymentOptions[1].icon}
+          />
+        </TouchableHighlight>
       </Box>
     </SafeAreaView>
   );

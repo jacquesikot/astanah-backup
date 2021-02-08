@@ -21,11 +21,14 @@ import {
   BillingSkeleton,
   ErrorLoading,
   Text,
+  ActivityIndicator,
+  ErrorMessage,
 } from '../../components';
 import { CartNavParamList, BillingInfo } from '../../../types';
 import billingApi from '../../api/billing';
 import { useApi } from '../../hooks';
 import { useAppContext } from '../../context/context';
+import orderApi from '../../api/order';
 
 const { width, height } = Dimensions.get('window');
 const BUTTON_TEXT = 'Payment';
@@ -46,14 +49,12 @@ const styles = StyleSheet.create({
   },
 });
 
-interface ShipToProps {}
-
 const ShipTo = ({
   navigation,
 }: StackScreenProps<CartNavParamList, 'ShipTo'>) => {
   const getBillingApi = useApi(billingApi.getBilling);
 
-  const { user, setAddress } = useAppContext();
+  const { user, setAddress, cart, cartTotal, manageCart } = useAppContext();
 
   const [address, setAddressState] = useState<BillingInfo>();
 
