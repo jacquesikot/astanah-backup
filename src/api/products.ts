@@ -8,7 +8,7 @@ const searchProducts = (searchParam?: string) =>
   client.get(endpoint, { searchBy: searchParam });
 
 const getProductsByCategory = (param: any) =>
-  client.get(endpoint, { category: param });
+  client.get(endpoint + '/category', { category: param });
 
 const getSaleProducts = (take: number) =>
   client.get(endpoint + '/sale', { take });

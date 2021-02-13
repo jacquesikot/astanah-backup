@@ -8,7 +8,7 @@ const local = 'http://172.20.10.6:4500/api';
 const local2 = 'http://192.168.43.60:4500/api';
 
 const apiClient = create({
-  baseURL: local,
+  baseURL: heroku,
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {

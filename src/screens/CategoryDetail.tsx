@@ -52,7 +52,7 @@ const CategoryDetail = ({
   const { category } = route.params;
   const { category_name, search_params } = category;
 
-  const getProductsApi = useApi(productsApi.searchProducts);
+  const getProductsApi = useApi(productsApi.getProductsByCategory);
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -67,7 +67,7 @@ const CategoryDetail = ({
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await getProductsApi.request(category_name);
+      await getProductsApi.request(search_params);
       dataArray.push(...getProductsApi.data.slice(0, offset));
       setRefreshing(false);
       return;
