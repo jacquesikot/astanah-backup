@@ -86,13 +86,16 @@ interface CartProps {}
 const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
   const { cart, manageCart, cartTotal } = useAppContext();
 
+  const finalAmount = cartTotal + IMPORT_CHARGES + SHIPPING_COST;
+  const finalAmountValue = finalAmount.toFixed(2);
+
   return (
     <SafeAreaView style={styles.container}>
       <Box style={{ alignItems: 'center' }}>
         <StackHeader title="Your Cart" />
         {cart.length > 0 ? (
           <>
-            <Box style={{ height: height * 0.355 }}>
+            <Box style={{ height: height * 0.455 }}>
               <FlatList
                 data={cart}
                 keyExtractor={(item: ProductOrder) => item.id.toString()}
@@ -105,7 +108,7 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
                 )}
               />
             </Box>
-            <Box style={styles.couponContainer}>
+            {/* <Box style={styles.couponContainer}>
               <Box style={styles.textInput}>
                 <TextInput
                   placeholder="Enter Coupon Code"
@@ -126,7 +129,7 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
                   noBorderRad
                 />
               </Box>
-            </Box>
+            </Box> */}
             <Box style={styles.summary}>
               <Box style={styles.summaryItem}>
                 <Text variant="b2" color="grey">
@@ -166,11 +169,7 @@ const Cart = ({ navigation }: StackScreenProps<CartNavParamList, 'Cart'>) => {
                 </Text>
                 <Box style={{ flex: 1 }} />
                 <Text variant="b2" color="primary">
-                  {'ZK' +
-                    ' ' +
-                    numberWithCommas(
-                      cartTotal + IMPORT_CHARGES + SHIPPING_COST
-                    )}
+                  {'ZK' + ' ' + numberWithCommas(Number(finalAmountValue))}
                 </Text>
               </Box>
             </Box>

@@ -102,7 +102,11 @@ const ForgotPassword = ({
                     </Text>
                   )}
                 </Box>
-                <Button label="Recover password" onPress={handleSubmit} />
+                <Button
+                  label="Recover password"
+                  onPress={handleSubmit}
+                  noShadow
+                />
               </Box>
             )}
           </Formik>

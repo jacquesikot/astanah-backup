@@ -48,7 +48,12 @@ const Provider = ({ children }: ProviderProps) => {
 
   const calculateTotal = () => {
     let total = 0;
-    cart.forEach((item) => (total += item.count! * Number(item.regular_price)));
+    cart.forEach(
+      (item) =>
+        (total +=
+          item.count! *
+          Number(item.sale_price ? item.sale_price : item.regular_price))
+    );
     setCartTotal(Number(total.toFixed(2)));
   };
 

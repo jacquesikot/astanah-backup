@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import { HeartIcon, HeartIconFill } from '../Svg';
 
 import { Box } from './Theme';
@@ -10,10 +10,18 @@ const styles = StyleSheet.create({
 
 interface Props {
   touched: boolean | undefined;
+  loading?: boolean;
+  newRender?: boolean;
 }
 
-const Likebutton = ({ touched }: Props) => {
-  return (
+const Likebutton = ({ touched, loading, newRender }: Props) => {
+  return loading ? (
+    <ActivityIndicator />
+  ) : newRender ? (
+    <Box style={styles.container}>
+      <HeartIcon />
+    </Box>
+  ) : (
     <Box style={styles.container}>
       {touched ? <HeartIconFill /> : <HeartIcon />}
     </Box>

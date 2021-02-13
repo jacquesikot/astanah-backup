@@ -5,7 +5,7 @@ import { Box, Text, theme } from '../components';
 import Banner from './home/Banner';
 
 const { width, height } = Dimensions.get('window');
-export const SLIDE_HEIGHT = height * 0.46;
+export const SLIDE_HEIGHT = height * 0.53;
 
 const styles = StyleSheet.create({
   container: {

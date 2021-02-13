@@ -26,8 +26,8 @@ const ProfileHead = ({ firstName, lastName, email }: ProfileHeadProps) => {
   return (
     <Box style={styles.container}>
       <Image
-        source={require('../../../assets/profile.png')}
-        style={{ width: 72, height: 72 }}
+        source={require('../../../assets/userPlaceholder.jpg')}
+        style={{ width: 72, height: 72, borderRadius: 20 }}
       />
       <Box>
         <Text variant="h4" color="primary" marginTop="l" marginLeft="l">

@@ -191,13 +191,13 @@ const Welcome = ({
         )}
       </Formik>
       <Box style={styles.seperator}>
-        <Box
+        {/* <Box
           borderBottomWidth={1}
           borderBottomColor="light"
           width={SEPERATOR_WIDTH}
           height={20}
-        />
-        <Box
+        /> */}
+        {/* <Box
           style={{
             marginTop: 10,
             width: SEPERATOR_TEXT_WIDTH,
@@ -214,9 +214,9 @@ const Welcome = ({
           borderBottomColor="light"
           width={SEPERATOR_WIDTH}
           height={20}
-        />
+        /> */}
       </Box>
-      <Box style={{ marginBottom: 10, marginTop: 7 }}>
+      {/* <Box style={{ marginBottom: 10, marginTop: 7 }}>
         <LoginButton
           type="Google"
           onPress={() => alert('Login with google coming soon')}
@@ -225,7 +225,7 @@ const Welcome = ({
       <LoginButton
         type="Facebook"
         onPress={() => alert('Login with Facebook coming soon')}
-      />
+      /> */}
       <Box marginTop="l">
         <Link
           label="Forgot password?"

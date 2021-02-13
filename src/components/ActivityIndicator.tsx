@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { AntDesign as Icon } from '@expo/vector-icons';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
+import { theme } from '../components';
 
 interface ActivityIndicatorProps {
   visible: boolean;
@@ -16,13 +20,15 @@ function ActivityIndicator({
   if (!visible) return null;
 
   return (
-    <View style={[styles.overlay, { opacity: opacityValue }]}>
-      <LottieView
-        autoPlay
-        loop
-        source={require('../../assets/animations/astanah_loading_animation.json')}
-      />
-    </View>
+    <>
+      <View style={[styles.overlay, { opacity: opacityValue }]}>
+        <LottieView
+          autoPlay
+          loop
+          source={require('../../assets/animations/astanah_loading_animation.json')}
+        />
+      </View>
+    </>
   );
 }
 const styles = StyleSheet.create({

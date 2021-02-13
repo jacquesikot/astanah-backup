@@ -90,6 +90,7 @@ const Favorites = ({
                       width={LOWER_CARD_WIDTH}
                       height={LOWER_CARD_HEIGHT}
                       marginRight={30}
+                      noRating
                     />
                   </TouchableWithoutFeedback>
                 )}

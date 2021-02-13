@@ -66,6 +66,7 @@ const AddAddress = ({
 }: StackScreenProps<AccountNavParamList, 'AddAddress'>) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const inputRef = useRef(null);
 

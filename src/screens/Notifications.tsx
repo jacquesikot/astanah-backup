@@ -8,6 +8,7 @@ import {
   StackHeader,
   theme,
   ProductSkeleton,
+  NoContent,
 } from '../components';
 import { HomeNavParamList } from '../../types';
 import { notifications } from '../data';
@@ -33,23 +34,36 @@ const Notifications = ({
   return (
     <SafeAreaView style={styles.container}>
       <Box>
-        <StackHeader title="Notifications" back={() => navigation.goBack()} />
-        <Box style={styles.flatlist}>
-          <FlatList
-            onRefresh={() => true}
-            refreshing={refreshing}
-            showsHorizontalScrollIndicator={false}
-            data={notifications}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <NotificationItem
-                notification={item}
-                onPress={() => alert('Notification Pressed')}
-                removeNotification={() => alert('Delete Notification')}
-              />
-            )}
+        {notifications.length < 1 ? (
+          <NoContent
+            message="No new notifications"
+            title="Notifications"
+            back={() => navigation.goBack()}
           />
-        </Box>
+        ) : (
+          <>
+            <StackHeader
+              title="Notifications"
+              back={() => navigation.goBack()}
+            />
+            <Box style={styles.flatlist}>
+              <FlatList
+                onRefresh={() => true}
+                refreshing={refreshing}
+                showsHorizontalScrollIndicator={false}
+                data={notifications}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <NotificationItem
+                    notification={item}
+                    onPress={() => alert('Notification Pressed')}
+                    removeNotification={() => alert('Delete Notification')}
+                  />
+                )}
+              />
+            </Box>
+          </>
+        )}
       </Box>
     </SafeAreaView>
   );

@@ -27,6 +27,7 @@ const assets = [
   require('./assets/astanah_logo.png'),
   require('./assets/order_confirmed.png'),
   require('./assets/search.png'),
+  require('./assets/userPlaceholder.jpg'),
 ];
 
 export default function App() {

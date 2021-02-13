@@ -11,6 +11,9 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native-gesture-handler';
+import * as Browser from 'expo-web-browser';
+import Linking from 'expo-linking';
+import Constants from 'expo-constants';
 
 import {
   AddressItem,
@@ -27,11 +30,17 @@ import {
 import { CartNavParamList, BillingInfo } from '../../../types';
 import billingApi from '../../api/billing';
 import { useApi } from '../../hooks';
-import { useAppContext } from '../../context/context';
+import {
+  useAppContext,
+  IMPORT_CHARGES,
+  SHIPPING_COST,
+} from '../../context/context';
 import orderApi from '../../api/order';
+import flutterPay, { CardPayProps } from '../../api/flutterPay';
+import { numberWithCommas } from '../../utils';
+import { add } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
-const BUTTON_TEXT = 'Payment';
 
 const styles = StyleSheet.create({
   container: {
@@ -57,6 +66,65 @@ const ShipTo = ({
   const { user, setAddress, cart, cartTotal, manageCart } = useAppContext();
 
   const [address, setAddressState] = useState<BillingInfo>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  const flutterPayment = useApi(flutterPay.sendPay);
+  const newOrderApi = useApi(orderApi.newOrder);
+
+  const finalAmount = Number(cartTotal) + IMPORT_CHARGES + SHIPPING_COST;
+
+  // Addres problem in storing data
+  const saveOrder = async () => {
+    try {
+      const order: any = {
+        user_id: user.id,
+        payment_method: 'card',
+        set_paid: 1,
+        billing_id: address?.id,
+        products: cart,
+        status: 'processing',
+        total: finalAmount.toString(),
+      };
+
+      await newOrderApi.request(order);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!address) return Alert.alert('Address', 'Please Select an address');
+    const data: CardPayProps = {
+      amount: cartTotal.toString(),
+      consumer_id: user.id.toString(),
+      email: user.email,
+      name: `${user.first_name} ${user.last_name}`,
+      phonenumber: address.phone,
+      redirect_url: Constants.linkingUri,
+    };
+    setLoading(true);
+    const payRequest = await flutterPayment.request(data);
+    if (flutterPayment.error) return setLoading(false);
+    const link = await payRequest.data.data.link;
+    setLoading(false);
+    const browser: any = await Browser.openAuthSessionAsync(
+      link,
+      Constants.linkingUri
+    );
+    console.log(browser);
+    const redirect_link = browser.url;
+    if (redirect_link.includes('status=success')) {
+      manageCart('EMPTY_CART');
+      setAddress({});
+      navigation.navigate('Success');
+      await saveOrder();
+    } else if (browser.type !== 'success') {
+      setError(true);
+    } else {
+      setError(true);
+    }
+  };
 
   useEffect(() => {
     getBillingApi.request(user.id);
@@ -84,20 +152,19 @@ const ShipTo = ({
             <Text variant="h4" color="primary" marginTop="m" marginBottom="xl">
               No Delivery Address Found..
             </Text>
-            <Button
-              label="Add Address"
-              onPress={() => navigation.navigate('AddAddress')}
-              width={width * 0.6}
-            />
+            <Text variant="b1" color="primary" marginTop="m" marginBottom="xl">
+              Add address in the account screen
+            </Text>
           </Box>
         </Box>
       ) : (
         <>
+          <ActivityIndicator visible={loading} opacity={0.8} />
           <Box style={{ alignItems: 'center', height: height * 0.8 }}>
-            <StackHeader
-              title="Ship To"
-              back={() => navigation.goBack()}
-              plus={() => navigation.navigate('AddAddress')}
+            <StackHeader title="Ship To" back={() => navigation.goBack()} />
+            <ErrorMessage
+              error="An error occured while making payment"
+              visible={error}
             />
             <Box
               marginTop="s"
@@ -126,12 +193,8 @@ const ShipTo = ({
           </Box>
           <Box style={{ height: height * 0.2 }}>
             <Button
-              label={BUTTON_TEXT}
-              onPress={() => {
-                if (!address)
-                  return Alert.alert('Address', 'Please Select an address');
-                return navigation.navigate('Payment');
-              }}
+              label={`Pay ZK${numberWithCommas(finalAmount)}`}
+              onPress={handleSubmit}
               noShadow
             />
           </Box>

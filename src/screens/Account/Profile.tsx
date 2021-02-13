@@ -67,7 +67,7 @@ const Profile = ({
               chevron
             />
           </TouchableHighlight>
-          <TouchableHighlight
+          {/* <TouchableHighlight
             underlayColor={theme.colors.light}
             onPress={() => navigation.navigate('PaymentInfo')}
           >
@@ -76,7 +76,7 @@ const Profile = ({
               icon={<CardTransferIcon color={theme.colors.primary} />}
               chevron
             />
-          </TouchableHighlight>
+          </TouchableHighlight> */}
           <TouchableHighlight
             underlayColor={theme.colors.light}
             onPress={() => navigation.navigate('Password')}

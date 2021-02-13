@@ -49,6 +49,7 @@ const CartItem = ({ product, margin, deleteItem }: CartItemProps) => {
   const uri = meta_thumbnail_id;
   const regPrice = Number(regular_price).toFixed(2);
   const salePrice = Number(sale_price).toFixed(2);
+  const finalPrice = salePrice ? salePrice : regPrice;
   const marginNo = margin ? margin : 0;
   return (
     <Box style={[styles.container, { marginTop: marginNo }]}>
@@ -77,12 +78,7 @@ const CartItem = ({ product, margin, deleteItem }: CartItemProps) => {
         <Box style={{ flex: 1 }} />
         <Box style={{ flexDirection: 'row' }}>
           <Text variant="h4" color="secondary">
-            {regular_price
-              ? 'ZK' + numberWithCommas(Number(regPrice)) + ' ' + `(X${count})`
-              : 'ZK' +
-                numberWithCommas(Number(salePrice)) +
-                ' ' +
-                `(X${count})`}
+            ZK{numberWithCommas(Number(finalPrice))} (X{count})
           </Text>
           <Box style={{ flex: 1 }} />
         </Box>

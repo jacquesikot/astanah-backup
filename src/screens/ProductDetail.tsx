@@ -24,6 +24,7 @@ import {
   ProductCard,
   QuantityModal,
   ProductFlatListSkeleton,
+  ActivityIndicator,
 } from '../components';
 import { FavoriteProps, HomeNavParamList, Product } from '../../types';
 import { discountPrecentage, numberWithCommas } from '../utils';
@@ -96,8 +97,10 @@ const ProductDetail = ({
   const [favoriteButton, setFavoriteButton] = useState<boolean>(false);
 
   const [modal, setModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [touched, setTouched] = useState<boolean>();
   const [favoritesData, setFavoritesData] = useState<any[]>([]);
+  const [newRender, setNewRender] = useState<boolean>(false);
 
   const {
     title,
@@ -111,11 +114,11 @@ const ProductDetail = ({
   const price = Number(regular_price).toFixed(2);
   const salePrice = Number(sale_price).toFixed(2);
 
-  const getProductsApi = useApi(productsApi.getProductsByCategory);
+  const getProductsApi = useApi(productsApi.searchProducts);
 
   const check = async () => {
     try {
-      setFavoriteButton(false);
+      setLoading(true);
 
       const response = await favoritesApi.getFavorites(user.id);
       const data: any = response.data;
@@ -124,7 +127,7 @@ const ProductDetail = ({
 
       res && setTouched(true);
 
-      setFavoriteButton(true);
+      setLoading(false);
 
       if (res) return true;
     } catch (error) {
@@ -132,15 +135,18 @@ const ProductDetail = ({
     }
   };
 
+  const searchParam = categories && categories.split(', ');
+  const searchText = searchParam && searchParam[0];
+
   useEffect(() => {
     check();
-    getProductsApi.request(gallery);
+    getProductsApi.request(searchText);
   }, []);
 
   const addToFavorites = async () => {
     try {
       if (touched) return;
-      Alert.alert('Favorites', 'Added to favorites');
+      Alert.alert('Favorites', 'Adding to favorites');
       await favoritesApi.addFavorite({
         user_id: user.id,
         product_id: product.id,
@@ -153,12 +159,14 @@ const ProductDetail = ({
 
   const removeFromFavorites = async () => {
     try {
-      Alert.alert('Favorites', 'Removed from favorites');
+      Alert.alert('Favorites', 'Removing from favorites');
       const favoriteToDelete = favoritesData.find(({ id }) => {
         return id === product.id;
       });
-      if (favoriteToDelete)
+      if (favoriteToDelete) {
         await favoritesApi.deleteFavorite(favoriteToDelete.favorite_id);
+        setNewRender(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -166,18 +174,20 @@ const ProductDetail = ({
 
   const handleFavorites = async () => {
     try {
+      setLoading(true);
       if (favoritesData.some((f: any) => f.id === product.id)) {
         setTouched(false);
         await removeFromFavorites();
       }
       setTouched(true);
       await addToFavorites();
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const images = categories && categories.split(', ');
+  const images = gallery.split(', ');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -210,9 +220,13 @@ const ProductDetail = ({
                 : 'ZK' + ' ' + numberWithCommas(Number(price))}
             </Text>
             <Box style={{ flex: 1 }} />
-            <Box style={styles.likeButton} visible={favoriteButton}>
+            <Box style={styles.likeButton}>
               <TouchableOpacity onPress={handleFavorites}>
-                <LikeButton touched={touched} />
+                <LikeButton
+                  touched={touched}
+                  loading={loading}
+                  newRender={newRender}
+                />
               </TouchableOpacity>
             </Box>
           </Box>

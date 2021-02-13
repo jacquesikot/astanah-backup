@@ -50,14 +50,14 @@ const CategoryDetail = ({
   route,
 }: StackScreenProps<HomeNavParamList, 'CategoryDetail'>) => {
   const { category } = route.params;
-  const { category_name } = category;
+  const { category_name, search_params } = category;
 
-  const getProductsApi = useApi(productsApi.getProductsByCategory);
+  const getProductsApi = useApi(productsApi.searchProducts);
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
-    getProductsApi.request(category_name);
+    getProductsApi.request(search_params);
   }, []);
 
   let offset = 6;
@@ -110,7 +110,6 @@ const CategoryDetail = ({
               onRefresh={onRefresh}
               onEndReachedThreshold={0.01}
               onEndReached={loadMoreData}
-              ListFooterComponent={<ActivityIndicator />}
               numColumns={2}
               data={dataArray}
               keyExtractor={(item: Product) => item.id.toString()}
