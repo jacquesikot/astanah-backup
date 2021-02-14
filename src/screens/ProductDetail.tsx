@@ -257,12 +257,19 @@ const ProductDetail = ({
                 : 'Sorry, no description available'}
             </Text>
           </Box>
-          <Box style={styles.rowBox}>
-            <Text variant="h4" color="primary" marginTop="xl" marginBottom="m">
-              You Might Also Like
-            </Text>
-            <Box style={{ flex: 1 }} />
-          </Box>
+          {getProductsApi.data.length > 1 ? (
+            <Box style={styles.rowBox}>
+              <Text
+                variant="h4"
+                color="primary"
+                marginTop="xl"
+                marginBottom="m"
+              >
+                You Might Also Like
+              </Text>
+              <Box style={{ flex: 1 }} />
+            </Box>
+          ) : null}
           <Box style={{ paddingLeft: 20, paddingRight: 20 }}>
             {getProductsApi.loading ? (
               <ProductFlatListSkeleton

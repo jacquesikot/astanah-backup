@@ -64,18 +64,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingLeft: 20,
   },
-  textInputs: {
-    marginTop: 0,
-  },
+  textInputs: {},
 });
 
 const RegisterSchema = Yup.object().shape({
   first_name: Yup.string()
-    .min(3, 'First name must be at least 3 characters')
+    .min(2, 'First name must be at least 3 characters')
     .max(50, 'First name must not exceed 50 characters')
     .required('First name is a required field'),
   last_name: Yup.string()
-    .min(3, 'Last name must be at least 3 characters')
+    .min(2, 'Last name must be at least 3 characters')
     .max(50, 'Last name must not exceed 50 characters')
     .required('Last name is a required field'),
   email: Yup.string().email().required('Email is a required field'),

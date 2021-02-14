@@ -2,7 +2,7 @@
   "expo": {
     "name": "Astanah",
     "slug": "astanah",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.astanah.astanahiosapp",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.2.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"

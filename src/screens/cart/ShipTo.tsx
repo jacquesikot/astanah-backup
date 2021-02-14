@@ -96,7 +96,7 @@ const ShipTo = ({
   const handleSubmit = async () => {
     if (!address) return Alert.alert('Address', 'Please Select an address');
     const data: CardPayProps = {
-      amount: cartTotal.toString(),
+      amount: finalAmount.toString(),
       consumer_id: user.id.toString(),
       email: user.email,
       name: `${user.first_name} ${user.last_name}`,
