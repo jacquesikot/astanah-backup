@@ -122,8 +122,8 @@ export interface Product {
   title: string;
   description: string;
   short_description: string;
-  regular_price: string;
-  sale_price: string;
+  regular_price: number;
+  sale_price: number;
   gallery: string;
   categories?: string;
   stock_quantity: string;

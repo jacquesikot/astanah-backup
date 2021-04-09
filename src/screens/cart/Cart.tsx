@@ -2,14 +2,7 @@ import React from 'react';
 import { Dimensions, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-import {
-  Box,
-  StackHeader,
-  TextInput,
-  theme,
-  Button,
-  Text,
-} from '../../components';
+import { Box, StackHeader, theme, Button, Text } from '../../components';
 import CartItem from '../../components/cart/CartItem';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CartNavParamList, ProductOrder } from '../../../types';

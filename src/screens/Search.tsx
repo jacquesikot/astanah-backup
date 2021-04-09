@@ -84,6 +84,7 @@ const Search = ({
       setLoading(true);
       setError(false);
       const searchText = e.nativeEvent.text;
+      console.log(searchText);
       const result = await productsApi.searchProducts(searchText);
       searchData = result.data;
       dataArray = [...searchData.slice(0, offset)];

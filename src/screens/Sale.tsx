@@ -76,6 +76,7 @@ const Sale = ({ navigation }: StackScreenProps<HomeNavParamList>) => {
                     width={CARD_WIDTH}
                     height={CARD_HEIGHT}
                     marginRight={30}
+                    noRating
                   />
                 </TouchableWithoutFeedback>
               )}

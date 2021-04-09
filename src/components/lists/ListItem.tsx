@@ -60,7 +60,7 @@ const ListItem = ({
         },
       ]}
     >
-      {index ? returnSvg(index) : null}
+      {returnSvg(index!)}
       {icon ? icon : null}
       <Text variant="b3B" color={textColorValue} marginLeft="m">
         {capitalize(label)}

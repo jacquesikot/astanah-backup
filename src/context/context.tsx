@@ -14,7 +14,7 @@ interface ProviderProps {
 }
 
 export const SHIPPING_COST = 500;
-export const IMPORT_CHARGES = 75;
+export const IMPORT_CHARGES = 20;
 
 const Context = createContext<AppContext>({
   isLoggedIn: false,
@@ -52,7 +52,7 @@ const Provider = ({ children }: ProviderProps) => {
       (item) =>
         (total +=
           item.count! *
-          Number(item.sale_price ? item.sale_price : item.regular_price))
+          Number(item.sale_price > 0 ? item.sale_price : item.regular_price))
     );
     setCartTotal(Number(total.toFixed(2)));
   };
