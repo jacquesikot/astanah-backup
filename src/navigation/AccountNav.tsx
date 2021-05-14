@@ -11,6 +11,9 @@ import {
   AddAddress,
   AddCard,
   EditAddress,
+  Welcome,
+  ForgotPassword,
+  Register,
 } from '../screens';
 
 const AccountStack = createStackNavigator<AccountNavParamList>();
@@ -26,6 +29,9 @@ const AcountNav = () => {
       <AccountStack.Screen name="AddCard" component={AddCard} />
       <AccountStack.Screen name="AddAddress" component={AddAddress} />
       <AccountStack.Screen name="EditAddress" component={EditAddress} />
+      <AccountStack.Screen name="Welcome" component={Welcome} />
+      <AccountStack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <AccountStack.Screen name="Register" component={Register} />
     </AccountStack.Navigator>
   );
 };

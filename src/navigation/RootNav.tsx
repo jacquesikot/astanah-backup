@@ -28,11 +28,9 @@ const RootNav = () => {
 
   return (
     <RootStack.Navigator headerMode="none">
-      {!isLoggedIn ? (
-        <RootStack.Screen name="AuthNav" component={AuthNav} />
-      ) : (
-        <RootStack.Screen name="AppNav" component={AppNav} />
-      )}
+      {/* <RootStack.Screen name="AuthNav" component={AuthNav} /> */}
+
+      <RootStack.Screen name="AppNav" component={AppNav} />
     </RootStack.Navigator>
   );
 };

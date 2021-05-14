@@ -16,6 +16,12 @@ const useAuth = () => {
 
   const logOut = () => {
     setUserState(false);
+    addUserDetails({
+      id: Math.random(),
+      first_name: '',
+      last_name: '',
+      email: '',
+    });
     authStorage.removeToken();
   };
 

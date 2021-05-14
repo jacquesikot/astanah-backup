@@ -34,7 +34,6 @@ const AppNav = () => {
       if (!permission.granted) return;
 
       const token = await Notifications.getExpoPushTokenAsync();
-     
     } catch (error) {
       console.log('Error getting a push token', error);
     }
@@ -127,6 +126,7 @@ const AppNav = () => {
           tabBarIcon: ({ color }) => {
             return <ProfileIcon color={color} />;
           },
+          unmountOnBlur: true,
         }}
       />
     </AppStack.Navigator>

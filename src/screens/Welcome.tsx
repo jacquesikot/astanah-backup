@@ -20,11 +20,12 @@ import {
   TextInput,
   ActivityIndicator,
 } from '../components';
-import { AuthParamList } from '../../types';
+import { AccountNavParamList, AuthParamList } from '../../types';
 import { CloseEye, Eye } from '../Svg';
 import localAuthApi from '../api/localAuth';
 import googleAuthApi from '../api/googleAuth';
 import useAuth from '../hooks/useAuth';
+import { CommonActions } from '@react-navigation/routers';
 
 const { width } = Dimensions.get('window');
 const SCREEN_PADDING = theme.spacing.xl * 2;
@@ -77,7 +78,7 @@ interface FormProps {
 
 const Welcome = ({
   navigation,
-}: StackScreenProps<AuthParamList, 'Welcome'>) => {
+}: StackScreenProps<AccountNavParamList, 'Welcome'>) => {
   const [passwordVissible, setPasswordVissible] = useState<boolean>(false);
   const { logIn } = useAuth();
   const [loginFailed, setLoginFailed] = useState<boolean>(false);
@@ -94,6 +95,11 @@ const Welcome = ({
     }
     setLoginFailed(false);
     logIn(result.data as string);
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: 'Home',
+      })
+    );
     setLoading(false);
   };
 
@@ -226,12 +232,6 @@ const Welcome = ({
         type="Facebook"
         onPress={() => alert('Login with Facebook coming soon')}
       /> */}
-      <Box marginTop="l">
-        <Link
-          label="Forgot password?"
-          onPress={() => navigation.navigate('ForgotPassword')}
-        />
-      </Box>
       <Box style={{ flexDirection: 'row', marginTop: 8 }}>
         <Text variant="b3" color="grey">
           Don't have an account?{' '}

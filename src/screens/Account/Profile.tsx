@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 import {
@@ -8,6 +8,7 @@ import {
   theme,
   ProfileHead,
   ListItem,
+  Text,
 } from '../../components';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AccountNavParamList } from '../../../types';
@@ -19,6 +20,7 @@ import {
   LogOut,
 } from '../../Svg';
 import useAuth from '../../hooks/useAuth';
+import { CommonActions } from '@react-navigation/routers';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,15 +42,35 @@ const Profile = ({
     <SafeAreaView style={styles.container}>
       <Box>
         <StackHeader title="Account" />
-        <ProfileHead
-          firstName={first_name}
-          lastName={lastNameValue}
-          email={email}
-        />
+        {user.email !== '' ? (
+          <ProfileHead
+            firstName={first_name}
+            lastName={lastNameValue}
+            email={email}
+          />
+        ) : (
+          <Box
+            width="100%"
+            alignItems="center"
+            height="10%"
+            justifyContent="center"
+            backgroundColor="light"
+          >
+            <Text variant="h5" color="dark">
+              {' '}
+              Login to save details
+            </Text>
+          </Box>
+        )}
         <Box>
           <TouchableHighlight
             underlayColor={theme.colors.light}
-            onPress={() => navigation.navigate('BasicInfo')}
+            onPress={() => {
+              if (user.email !== '') {
+                navigation.navigate('BasicInfo');
+              }
+              Alert.alert('', 'Login to add info');
+            }}
           >
             <ListItem
               label="Basic Information"
@@ -59,7 +81,12 @@ const Profile = ({
 
           <TouchableHighlight
             underlayColor={theme.colors.light}
-            onPress={() => navigation.navigate('AddressInfo')}
+            onPress={() => {
+              if (user.email !== '') {
+                navigation.navigate('AddressInfo');
+              }
+              Alert.alert('', 'Login to add info');
+            }}
           >
             <ListItem
               label="Addresses"
@@ -79,7 +106,12 @@ const Profile = ({
           </TouchableHighlight> */}
           <TouchableHighlight
             underlayColor={theme.colors.light}
-            onPress={() => navigation.navigate('Password')}
+            onPress={() => {
+              if (user.email !== '') {
+                navigation.navigate('ForgotPassword');
+              }
+              Alert.alert('', 'Login to add info');
+            }}
           >
             <ListItem
               label="Passwords"
@@ -90,14 +122,28 @@ const Profile = ({
         </Box>
         <TouchableHighlight
           underlayColor={theme.colors.light}
-          onPress={() => logOut()} // implement 'are you sure you wanna logout'
+          onPress={() => {
+            if (user.email !== '') {
+              logOut();
+            }
+            navigation.navigate('Welcome');
+          }} // implement 'are you sure you wanna logout'
         >
-          <ListItem
-            label="Logout"
-            icon={<LogOut color={theme.colors.red} />}
-            chevron
-            textColor="red"
-          />
+          {user.email !== '' ? (
+            <ListItem
+              label="Logout"
+              icon={<LogOut color={theme.colors.red} />}
+              chevron
+              textColor="red"
+            />
+          ) : (
+            <ListItem
+              label="Login"
+              icon={<LogOut color={theme.colors.primary} />}
+              chevron
+              textColor="primary"
+            />
+          )}
         </TouchableHighlight>
       </Box>
     </SafeAreaView>

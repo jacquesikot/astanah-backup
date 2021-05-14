@@ -41,7 +41,7 @@ const Provider = ({ children }: ProviderProps) => {
   const [cartTotal, setCartTotal] = useState<number>(0);
   const [user, setUser] = useState<User>({
     id: Math.random(),
-    first_name: '',
+    first_name: '',  
     last_name: '',
     email: '',
   });
@@ -108,7 +108,6 @@ const Provider = ({ children }: ProviderProps) => {
     isLoggedIn,
     setUserState,
     user,
-
     addUserDetails,
     isProductInCart,
     manageCart,
