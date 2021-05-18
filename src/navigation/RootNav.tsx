@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 
 import { RootParamList, User } from '../../types';
-import { AuthNav, AppNav } from '../navigation';
+import { AppNav } from '../navigation';
 import { useAppContext } from '../context/context';
 import authStorage from '../utils/authStorage';
 
@@ -18,13 +18,16 @@ const RootNav = () => {
     if (user) {
       addUserDetails(user as User);
       setUserState(true);
+      setIsReady(true);
     }
+    setIsReady(true);
   };
 
-  if (!isReady)
-    return (
-      <AppLoading startAsync={restoreUser} onFinish={() => setIsReady(true)} />
-    );
+  useEffect(() => {
+    restoreUser();
+  }, []);
+
+  if (!isReady) return <AppLoading />;
 
   return (
     <RootStack.Navigator headerMode="none">

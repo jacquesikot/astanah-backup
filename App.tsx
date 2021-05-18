@@ -33,7 +33,7 @@ const assets = [
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LoadAssets {...{ fonts, assets }}>
+      <LoadAssets fonts={fonts} assets={assets}>
         <Provider>
           <OfflineNotice />
           <RootNav />
